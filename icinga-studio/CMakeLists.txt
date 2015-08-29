@@ -1,4 +1,4 @@
-﻿# Icinga 2
+# Icinga 2
 # Copyright (C) 2012-2015 Icinga Development Team (http://www.icinga.org)
 #
 # This program is free software; you can redistribute it and/or

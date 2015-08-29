@@ -54,11 +54,6 @@ ConnectForm::ConnectForm(wxWindow *parent, const Url::Ptr& url)
 		m_PortText->SetValue("5665");
 }
 
-void ConnectForm::OnResizeInfoLabel(wxSizeEvent& event)
-{
-	m_InfoLabel->Wrap(m_InfoLabel->GetClientSize().GetWidth());
-}
-
 Url::Ptr ConnectForm::GetUrl(void) const
 {
 	wxString url = "https://" + m_UserText->GetValue() + ":" + m_PasswordText->GetValue()

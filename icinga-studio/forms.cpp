@@ -122,6 +122,7 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	m_PasswordText = new wxTextCtrl( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD );
 	m_DetailsSizer->Add( m_PasswordText, 0, wxALL|wxEXPAND, 5 );
 	
+	wxStaticText* m_InfoLabel;
 	m_InfoLabel = new wxStaticText( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxT("You can find the username and password for the default user in /etc/icinga2/conf.d/api-users.conf."), wxDefaultPosition, wxDefaultSize, 0 );
 	m_InfoLabel->Wrap( 270 );
 	m_DetailsSizer->Add( m_InfoLabel, 0, wxALL, 5 );
@@ -161,16 +162,10 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	m_DialogSizer->Fit( this );
 	
 	this->Centre( wxBOTH );
-	
-	// Connect Events
-	m_InfoLabel->Connect( wxEVT_SIZE, wxSizeEventHandler( ConnectFormBase::OnResizeInfoLabel ), NULL, this );
 }
 
 ConnectFormBase::~ConnectFormBase()
 {
-	// Disconnect Events
-	m_InfoLabel->Disconnect( wxEVT_SIZE, wxSizeEventHandler( ConnectFormBase::OnResizeInfoLabel ), NULL, this );
-	
 }
 
 AboutFormBase::AboutFormBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )

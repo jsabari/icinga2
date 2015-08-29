@@ -32,9 +32,6 @@ public:
 	ConnectForm(wxWindow *parent, const Url::Ptr& url);
 
 	Url::Ptr GetUrl(void) const;
-
-protected:
-	virtual void OnResizeInfoLabel(wxSizeEvent& event) override;
 };
 
 }

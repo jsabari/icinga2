@@ -73,11 +73,6 @@ class ConnectFormBase : public wxDialog
 		wxTextCtrl* m_PortText;
 		wxTextCtrl* m_UserText;
 		wxTextCtrl* m_PasswordText;
-		wxStaticText* m_InfoLabel;
-		
-		// Virtual event handlers, overide them in your derived class
-		virtual void OnResizeInfoLabel( wxSizeEvent& event ) { event.Skip(); }
-		
 	
 	public:
 		

@@ -10,14 +10,19 @@
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
-#include <wx/treectrl.h>
+#include <wx/string.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
+#include <wx/menu.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
-#include <wx/string.h>
+#include <wx/treectrl.h>
 #include <wx/listctrl.h>
 #include <wx/sizer.h>
+#include <wx/statusbr.h>
 #include <wx/frame.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
@@ -25,6 +30,7 @@
 #include <wx/panel.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/statbmp.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -36,13 +42,29 @@ class MainFormBase : public wxFrame
 	private:
 	
 	protected:
+		enum
+		{
+			ID_CONNECT = 1000,
+			ID_QUIT,
+			ID_ABOUT
+		};
+		
+		wxMenuBar* m_MenuBar;
+		wxMenu* m_FileMenu;
+		wxMenu* m_HelpMenu;
 		wxTreeCtrl* m_TypesTree;
 		wxListCtrl* m_ObjectsList;
 		wxListCtrl* m_PropertiesList;
+		wxStatusBar* m_StatusBar;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnQuitClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnAboutClicked( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
-		MainFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 667,487 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1022,632 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~MainFormBase();
 	
@@ -72,7 +94,7 @@ class ConnectFormBase : public wxDialog
 	
 	public:
 		
-		ConnectFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio - Connect"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 336,383 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		ConnectFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio - Connect"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ConnectFormBase();
 	
 };
@@ -80,16 +102,16 @@ class ConnectFormBase : public wxDialog
 ///////////////////////////////////////////////////////////////////////////////
 /// Class AboutFormBase
 ///////////////////////////////////////////////////////////////////////////////
-class AboutFormBase : public wxFrame 
+class AboutFormBase : public wxDialog 
 {
 	private:
 	
 	protected:
+		wxStaticText* m_VersionLabel;
 	
 	public:
 		
-		AboutFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-		
+		AboutFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("About Icinga Studio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( -1,-1 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~AboutFormBase();
 	
 };

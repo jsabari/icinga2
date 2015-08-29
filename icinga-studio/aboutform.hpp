@@ -17,40 +17,20 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.             *
  ******************************************************************************/
 
-#include "icinga-studio/mainform.hpp"
-#include "icinga-studio/aboutform.hpp"
+#ifndef ABOUTFORM_H
+#define ABOUTFORM_H
 
-using namespace icinga;
+#include "icinga-studio/forms.h"
 
-MainForm::MainForm(wxWindow *parent, const Url::Ptr& url)
-	: MainFormBase(parent)
+namespace icinga
 {
-#ifdef _WIN32
-	SetIcon(wxICON(icinga));
-#endif /* _WIN32 */
-	
-	std::string sUrl = url->Format();
-	SetTitle(sUrl + " - Icinga Studio");
 
-	m_ApiClient = new ApiClient("mon.shroudbox.net", 5665, "root", "U1aIqWl4UnQP");
+class AboutForm : public AboutFormBase
+{
+public:
+	AboutForm(wxWindow *parent);
+};
 
-	m_ObjectsList->InsertColumn(0, "Name", 0, 300);
-
-	m_PropertiesList->InsertColumn(0, "Name", 0, 250);
-	m_PropertiesList->InsertColumn(1, "Value", 0, 300);
-
-	wxTreeItemId id = m_TypesTree->AddRoot("Object", 0);
-	m_TypesTree->AppendItem(id, "ConfigObject", 0);
 }
 
-void MainForm::OnQuitClicked(wxCommandEvent& event)
-{
-	Close();
-}
-
-
-void MainForm::OnAboutClicked(wxCommandEvent& event)
-{
-	AboutForm form(this);
-	form.ShowModal();
-}
+#endif /* ABOUTFORM_H */

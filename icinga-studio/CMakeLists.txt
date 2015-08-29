@@ -1,4 +1,4 @@
-# Icinga 2
+﻿# Icinga 2
 # Copyright (C) 2012-2015 Icinga Development Team (http://www.icinga.org)
 #
 # This program is free software; you can redistribute it and/or
@@ -25,7 +25,9 @@ else()
   set(WindowsSources "")
 endif()
 
-add_executable(icinga-studio MACOSX_BUNDLE WIN32 icinga-studio.cpp forms.cpp connectform.cpp mainform.cpp icinga.icns api.cpp ${WindowsSources})
+add_executable(icinga-studio MACOSX_BUNDLE WIN32 icinga-studio.cpp
+  forms.cpp aboutform.cpp connectform.cpp mainform.cpp
+  icinga.icns api.cpp ${WindowsSources})
 
 include_directories(${Boost_INCLUDE_DIRS})
 target_link_libraries(icinga-studio ${Boost_LIBRARIES} ${wxWidgets_LIBRARIES} base remote)

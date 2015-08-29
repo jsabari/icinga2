@@ -18,7 +18,7 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_MenuBar = new wxMenuBar( 0 );
 	m_FileMenu = new wxMenu();
 	wxMenuItem* m_ConnectMenuItem;
-	m_ConnectMenuItem = new wxMenuItem( m_FileMenu, ID_CONNECT, wxString( wxT("&Connect") ) , wxEmptyString, wxITEM_NORMAL );
+	m_ConnectMenuItem = new wxMenuItem( m_FileMenu, ID_CONNECT, wxString( wxT("&Connect...") ) , wxEmptyString, wxITEM_NORMAL );
 	m_FileMenu->Append( m_ConnectMenuItem );
 	
 	wxMenuItem* m_QuitMenuItem;
@@ -29,7 +29,7 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	m_HelpMenu = new wxMenu();
 	wxMenuItem* m_AboutMenuItem;
-	m_AboutMenuItem = new wxMenuItem( m_HelpMenu, ID_ABOUT, wxString( wxT("&About") ) , wxEmptyString, wxITEM_NORMAL );
+	m_AboutMenuItem = new wxMenuItem( m_HelpMenu, wxID_ABOUT, wxString( wxT("&About") ) , wxEmptyString, wxITEM_NORMAL );
 	m_HelpMenu->Append( m_AboutMenuItem );
 	
 	m_MenuBar->Append( m_HelpMenu, wxT("&Help") ); 
@@ -76,7 +76,7 @@ MainFormBase::~MainFormBase()
 {
 	// Disconnect Events
 	this->Disconnect( ID_QUIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnQuitClicked ) );
-	this->Disconnect( ID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnAboutClicked ) );
+	this->Disconnect( wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnAboutClicked ) );
 	
 }
 

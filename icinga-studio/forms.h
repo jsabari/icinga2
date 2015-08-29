@@ -45,8 +45,7 @@ class MainFormBase : public wxFrame
 		enum
 		{
 			ID_CONNECT = 1000,
-			ID_QUIT,
-			ID_ABOUT
+			ID_QUIT
 		};
 		
 		wxMenuBar* m_MenuBar;

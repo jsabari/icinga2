@@ -17,14 +17,12 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	m_MenuBar = new wxMenuBar( 0 );
 	m_FileMenu = new wxMenu();
-	wxMenuItem* m_QuitMenuItem;
 	m_QuitMenuItem = new wxMenuItem( m_FileMenu, wxID_EXIT, wxString( wxT("&Quit") ) , wxEmptyString, wxITEM_NORMAL );
 	m_FileMenu->Append( m_QuitMenuItem );
 	
 	m_MenuBar->Append( m_FileMenu, wxT("&File") ); 
 	
 	m_HelpMenu = new wxMenu();
-	wxMenuItem* m_AboutMenuItem;
 	m_AboutMenuItem = new wxMenuItem( m_HelpMenu, wxID_ABOUT, wxString( wxT("&About Icinga Studio...") ) , wxEmptyString, wxITEM_NORMAL );
 	m_HelpMenu->Append( m_AboutMenuItem );
 	

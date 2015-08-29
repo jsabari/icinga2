@@ -94,7 +94,7 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	wxBoxSizer* m_ButtonsSizer;
 	m_ButtonsSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_OKButton = new wxButton( this, wxID_ANY, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_OKButton = new wxButton( this, wxID_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_ButtonsSizer->Add( m_OKButton, 0, wxALL, 5 );
 	
 	m_CancelButton = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -110,6 +110,7 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	m_InfoLabel->Connect( wxEVT_SIZE, wxSizeEventHandler( ConnectFormBase::OnResizeInfoLabel ), NULL, this );
 	m_OKButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnOKClicked ), NULL, this );
 	m_CancelButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnCancelClicked ), NULL, this );
 }
@@ -117,12 +118,13 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 ConnectFormBase::~ConnectFormBase()
 {
 	// Disconnect Events
+	m_InfoLabel->Disconnect( wxEVT_SIZE, wxSizeEventHandler( ConnectFormBase::OnResizeInfoLabel ), NULL, this );
 	m_OKButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnOKClicked ), NULL, this );
 	m_CancelButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnCancelClicked ), NULL, this );
 	
 }
 
-AboutForm::AboutForm( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+AboutFormBase::AboutFormBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -130,6 +132,6 @@ AboutForm::AboutForm( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Centre( wxBOTH );
 }
 
-AboutForm::~AboutForm()
+AboutFormBase::~AboutFormBase()
 {
 }

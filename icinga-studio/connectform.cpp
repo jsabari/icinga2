@@ -18,7 +18,51 @@
  ******************************************************************************/
 
 #include "icinga-studio/connectform.hpp"
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
-ConnectForm::ConnectForm(wxWindow *parent)
+using namespace icinga;
+
+ConnectForm::ConnectForm(wxWindow *parent, const Url::Ptr& url)
 	: ConnectFormBase(parent)
-{ }
+{
+#ifdef _WIN32
+	SetIcon(wxICON(icinga));
+#endif /* _WIN32 */
+
+	std::string authority = url->GetAuthority();
+
+	std::vector<std::string> tokens;
+	boost::algorithm::split(tokens, authority, boost::is_any_of("@"));
+
+	if (tokens.size() > 1) {
+		std::vector<std::string> userinfo;
+		boost::algorithm::split(userinfo, tokens[0], boost::is_any_of(":"));
+
+		m_UserText->SetValue(userinfo[0]);
+		m_PasswordText->SetValue(userinfo[1]);
+	}
+
+	std::vector<std::string> hostport;
+	boost::algorithm::split(hostport, tokens.size() > 1 ? tokens[1] : tokens[0], boost::is_any_of(":"));
+
+	m_HostText->SetValue(hostport[0]);
+
+	if (hostport.size() > 1)
+		m_PortText->SetValue(hostport[1]);
+	else
+		m_PortText->SetValue("5665");
+}
+
+void ConnectForm::OnResizeInfoLabel(wxSizeEvent& event)
+{
+	m_InfoLabel->Wrap(m_InfoLabel->GetClientSize().GetWidth());
+}
+
+Url::Ptr ConnectForm::GetUrl(void) const
+{
+	String url = "https://" + m_UserText->GetValue() + ":" + m_PasswordText->GetValue()
+	    + "@" + m_HostText->GetValue() + ":" + m_PortText->GetValue() + "/";
+
+	return new Url(url);
+}

@@ -20,12 +20,23 @@
 #ifndef CONNECTFORM_H
 #define CONNECTFORM_H
 
+#include "remote/url.hpp"
 #include "icinga-studio/forms.h"
+
+namespace icinga
+{
 
 class ConnectForm : public ConnectFormBase
 {
 public:
-	ConnectForm(wxWindow *parent);
+	ConnectForm(wxWindow *parent, const Url::Ptr& url);
+
+	Url::Ptr GetUrl(void) const;
+
+protected:
+	virtual void OnResizeInfoLabel(wxSizeEvent& event) override;
 };
+
+}
 
 #endif /* CONNECTFORM_H */

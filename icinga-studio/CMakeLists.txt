@@ -1,4 +1,4 @@
-# Icinga 2
+﻿# Icinga 2
 # Copyright (C) 2012-2015 Icinga Development Team (http://www.icinga.org)
 #
 # This program is free software; you can redistribute it and/or
@@ -19,8 +19,16 @@ set(wxWidgets_CONFIGURATION mswu)
 find_package(wxWidgets COMPONENTS core base REQUIRED)
 include(${wxWidgets_USE_FILE})
 
-add_executable(icinga-studio MACOSX_BUNDLE WIN32 icinga-studio.cpp forms.cpp connectform.cpp mainform.cpp icinga.icns)
-target_link_libraries(icinga-studio ${wxWidgets_LIBRARIES})
+if(MSVC)
+  set(WindowsSources icinga.rc)
+else()
+  set(WindowsSources "")
+endif()
+
+add_executable(icinga-studio MACOSX_BUNDLE WIN32 icinga-studio.cpp forms.cpp connectform.cpp mainform.cpp icinga.icns api.cpp ${WindowsSources})
+
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(icinga-studio ${Boost_LIBRARIES} ${wxWidgets_LIBRARIES} base remote)
 
 if(APPLE)
   set_source_files_properties(icinga.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
@@ -39,4 +47,15 @@ set_target_properties (
   MACOSX_BUNDLE_LONG_VERSION_STRING "${GIT_VERSION}"
   MACOSX_BUNDLE_COPYRIGHT "© Icinga Development Team"
   MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist.in"
+)
+
+if(WIN32)
+  set(InstallPath "${CMAKE_INSTALL_SBINDIR}")
+else()
+  set(InstallPath "${CMAKE_INSTALL_BINDIR}")
+endif()
+
+install(
+  TARGETS icinga-studio
+  RUNTIME DESTINATION ${InstallPath}
 )

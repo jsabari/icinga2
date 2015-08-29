@@ -42,7 +42,7 @@ class MainFormBase : public wxFrame
 	
 	public:
 		
-		MainFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 667,487 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 667,487 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~MainFormBase();
 	
@@ -54,37 +54,38 @@ class MainFormBase : public wxFrame
 class ConnectFormBase : public wxDialog 
 {
 	private:
-	
-	protected:
 		wxPanel* m_ConnectionDetailsPanel;
 		wxStaticText* m_HostLabel;
-		wxTextCtrl* m_HostText;
 		wxStaticText* m_PortLabel;
-		wxTextCtrl* m_PortText;
 		wxStaticText* m_UserLabel;
-		wxTextCtrl* m_UserText;
 		wxStaticText* m_PasswordLabel;
-		wxTextCtrl* m_PasswordText;
-		wxStaticText* m_InfoLabel;
 		wxButton* m_OKButton;
 		wxButton* m_CancelButton;
+	
+	protected:
+		wxTextCtrl* m_HostText;
+		wxTextCtrl* m_PortText;
+		wxTextCtrl* m_UserText;
+		wxTextCtrl* m_PasswordText;
+		wxStaticText* m_InfoLabel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnResizeInfoLabel( wxSizeEvent& event ) { event.Skip(); }
 		virtual void OnOKClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnCancelClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		ConnectFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio - Connect"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 336,388 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		ConnectFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio - Connect"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 336,383 ), long style = wxDEFAULT_DIALOG_STYLE ); 
 		~ConnectFormBase();
 	
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class AboutForm
+/// Class AboutFormBase
 ///////////////////////////////////////////////////////////////////////////////
-class AboutForm : public wxFrame 
+class AboutFormBase : public wxFrame 
 {
 	private:
 	
@@ -92,9 +93,9 @@ class AboutForm : public wxFrame
 	
 	public:
 		
-		AboutForm( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		AboutFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
-		~AboutForm();
+		~AboutFormBase();
 	
 };
 

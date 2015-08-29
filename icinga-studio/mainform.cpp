@@ -21,4 +21,8 @@
 
 MainForm::MainForm(wxWindow *parent)
 	: MainFormBase(parent)
-{ }
+{
+#ifdef _WIN32
+	SetIcon(wxICON(icinga));
+#endif /* _WIN32 */
+}

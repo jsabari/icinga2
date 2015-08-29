@@ -47,7 +47,7 @@
             <property name="size">667,487</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
-            <property name="title"></property>
+            <property name="title">Icinga Studio</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -436,7 +436,7 @@
             <property name="minimum_size"></property>
             <property name="name">ConnectFormBase</property>
             <property name="pos"></property>
-            <property name="size">336,388</property>
+            <property name="size">336,383</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
             <property name="subclass"></property>
             <property name="title">Icinga Studio - Connect</property>
@@ -528,7 +528,7 @@
                         <property name="pane_border">1</property>
                         <property name="pane_position"></property>
                         <property name="pane_size"></property>
-                        <property name="permission">protected</property>
+                        <property name="permission">private</property>
                         <property name="pin_button">1</property>
                         <property name="pos"></property>
                         <property name="resize">Resizable</property>
@@ -615,7 +615,7 @@
                                     <property name="pane_border">1</property>
                                     <property name="pane_position"></property>
                                     <property name="pane_size"></property>
-                                    <property name="permission">protected</property>
+                                    <property name="permission">private</property>
                                     <property name="pin_button">1</property>
                                     <property name="pos"></property>
                                     <property name="resize">Resizable</property>
@@ -789,7 +789,7 @@
                                     <property name="pane_border">1</property>
                                     <property name="pane_position"></property>
                                     <property name="pane_size"></property>
-                                    <property name="permission">protected</property>
+                                    <property name="permission">private</property>
                                     <property name="pin_button">1</property>
                                     <property name="pos"></property>
                                     <property name="resize">Resizable</property>
@@ -963,7 +963,7 @@
                                     <property name="pane_border">1</property>
                                     <property name="pane_position"></property>
                                     <property name="pane_size"></property>
-                                    <property name="permission">protected</property>
+                                    <property name="permission">private</property>
                                     <property name="pin_button">1</property>
                                     <property name="pos"></property>
                                     <property name="resize">Resizable</property>
@@ -1137,7 +1137,7 @@
                                     <property name="pane_border">1</property>
                                     <property name="pane_position"></property>
                                     <property name="pane_size"></property>
-                                    <property name="permission">protected</property>
+                                    <property name="permission">private</property>
                                     <property name="pin_button">1</property>
                                     <property name="pos"></property>
                                     <property name="resize">Resizable</property>
@@ -1346,7 +1346,7 @@
                                     <event name="OnRightDown"></event>
                                     <event name="OnRightUp"></event>
                                     <event name="OnSetFocus"></event>
-                                    <event name="OnSize"></event>
+                                    <event name="OnSize">OnResizeInfoLabel</event>
                                     <event name="OnUpdateUI"></event>
                                 </object>
                             </object>
@@ -1394,7 +1394,7 @@
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
                                 <property name="hidden">0</property>
-                                <property name="id">wxID_ANY</property>
+                                <property name="id">wxID_OK</property>
                                 <property name="label">OK</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -1407,7 +1407,7 @@
                                 <property name="pane_border">1</property>
                                 <property name="pane_position"></property>
                                 <property name="pane_size"></property>
-                                <property name="permission">protected</property>
+                                <property name="permission">private</property>
                                 <property name="pin_button">1</property>
                                 <property name="pos"></property>
                                 <property name="resize">Resizable</property>
@@ -1495,7 +1495,7 @@
                                 <property name="pane_border">1</property>
                                 <property name="pane_position"></property>
                                 <property name="pane_size"></property>
-                                <property name="permission">protected</property>
+                                <property name="permission">private</property>
                                 <property name="pin_button">1</property>
                                 <property name="pos"></property>
                                 <property name="resize">Resizable</property>
@@ -1558,7 +1558,7 @@
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
-            <property name="name">AboutForm</property>
+            <property name="name">AboutFormBase</property>
             <property name="pos"></property>
             <property name="size">500,300</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>

@@ -17,44 +17,4 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.             *
  ******************************************************************************/
 
-#include "icinga-studio/connectform.hpp"
-#include "icinga-studio/mainform.hpp"
-#include <wx/wx.h>
-#include <wx/app.h>
-#include <wx/config.h>
-
-using namespace icinga;
-
-class IcingaStudio : public wxApp
-{
-public:
-	virtual bool OnInit(void) override
-	{
-		m_Config = new wxConfig("IcingaStudio");
-
-		wxString wurl;
-
-		if (!m_Config->Read("url", &wurl))
-			wurl = "https://localhost:5665/";
-
-		std::string url = wurl;
-
-		ConnectForm f(NULL, new Url(url));
-		if (f.ShowModal() != wxID_OK)
-			return false;
-
-		url = f.GetUrl()->Format();
-		wurl = url;
-		m_Config->Write("url", wurl);
-
-		MainForm *m = new MainForm(NULL);
-		m->Show();
-
-		return true;
-	}
-
-private:
-	wxConfig *m_Config;
-};
-
-wxIMPLEMENT_APP(IcingaStudio);
+#include "icinga-studio/api.hpp"

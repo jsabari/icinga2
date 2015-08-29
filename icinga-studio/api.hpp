@@ -17,44 +17,81 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.             *
  ******************************************************************************/
 
-#include "icinga-studio/connectform.hpp"
-#include "icinga-studio/mainform.hpp"
-#include <wx/wx.h>
-#include <wx/app.h>
-#include <wx/config.h>
+#ifndef API_H
+#define API_H
 
-using namespace icinga;
+#include "base/string.hpp"
+#include <vector>
 
-class IcingaStudio : public wxApp
+namespace icinga
+{
+
+struct ApiFieldAttributes
 {
 public:
-	virtual bool OnInit(void) override
-	{
-		m_Config = new wxConfig("IcingaStudio");
-
-		wxString wurl;
-
-		if (!m_Config->Read("url", &wurl))
-			wurl = "https://localhost:5665/";
-
-		std::string url = wurl;
-
-		ConnectForm f(NULL, new Url(url));
-		if (f.ShowModal() != wxID_OK)
-			return false;
-
-		url = f.GetUrl()->Format();
-		wurl = url;
-		m_Config->Write("url", wurl);
-
-		MainForm *m = new MainForm(NULL);
-		m->Show();
-
-		return true;
-	}
-
-private:
-	wxConfig *m_Config;
+	bool Config;
+	bool Internal;
+	bool Required;
+	bool State;
 };
 
-wxIMPLEMENT_APP(IcingaStudio);
+class ApiType;
+
+struct ApiField
+{
+public:
+	String Name;
+	int ID;
+	int ArrayRank;
+	ApiFieldAttributes FieldAttributes;
+	String TypeName;
+	intrusive_ptr<ApiType> Type;
+};
+
+class ApiType : public Object
+{
+public:
+	DECLARE_PTR_TYPEDEFS(ApiType);
+
+	String Name;
+	String BaseName;
+	ApiType::Ptr Base;
+	bool Abstract;
+	std::map<String, ApiField> Fields;
+	std::vector<String> PrototypeKeys;
+};
+
+struct ApiObjectReference
+{
+public:
+	String Name;
+	String Type;
+};
+
+struct ApiObject
+{
+public:
+	std::map<String, Value> Attrs;
+	std::vector<ApiObjectReference> UsedBy;
+};
+
+class ApiClient : public Object
+{
+public:
+	DECLARE_PTR_TYPEDEFS(ApiClient);
+
+	ApiClient(const String& host, unsigned short port,
+	    const String& user, const String& password);
+
+	std::vector<ApiType> GetTypes(void) const;
+	std::vector<ApiObject> GetObjects(const String& type,
+	    const std::vector<String>& names = std::vector<String>(),
+	    const std::vector<String>& attrs = std::vector<String>()) const;
+
+private:
+	static String GetPluralTypeName(const String& type);
+};
+
+}
+
+#endif /* API_H */

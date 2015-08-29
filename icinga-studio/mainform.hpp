@@ -20,12 +20,22 @@
 #ifndef MAINFORM_H
 #define MAINFORM_H
 
+#include "icinga-studio/api.hpp"
+#include "remote/url.hpp"
 #include "icinga-studio/forms.h"
+
+namespace icinga
+{
 
 class MainForm : public MainFormBase
 {
 public:
-	MainForm(wxWindow *parent);
+	MainForm(wxWindow *parent, const Url::Ptr& url);
+
+private:
+	ApiClient::Ptr m_ApiClient;
 };
+
+}
 
 #endif /* MAINFORM_H */

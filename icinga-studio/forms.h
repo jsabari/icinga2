@@ -36,9 +36,9 @@ class MainFormBase : public wxFrame
 	private:
 	
 	protected:
-		wxTreeCtrl* m_treeCtrl1;
-		wxListCtrl* m_listCtrl1;
-		wxListCtrl* m_listCtrl2;
+		wxTreeCtrl* m_TypesTree;
+		wxListCtrl* m_ObjectsList;
+		wxListCtrl* m_PropertiesList;
 	
 	public:
 		
@@ -54,11 +54,6 @@ class MainFormBase : public wxFrame
 class ConnectFormBase : public wxDialog 
 {
 	private:
-		wxPanel* m_ConnectionDetailsPanel;
-		wxStaticText* m_HostLabel;
-		wxStaticText* m_PortLabel;
-		wxStaticText* m_UserLabel;
-		wxStaticText* m_PasswordLabel;
 		wxButton* m_OKButton;
 		wxButton* m_CancelButton;
 	

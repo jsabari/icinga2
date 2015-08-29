@@ -18,3 +18,30 @@
  ******************************************************************************/
 
 #include "icinga-studio/api.hpp"
+
+using namespace icinga;
+
+ApiClient::ApiClient(const String& host, unsigned short port,
+    const String& user, const String& password)
+{
+
+}
+
+std::vector<ApiType> ApiClient::GetTypes(void) const
+{
+	return std::vector<ApiType>();
+}
+
+std::vector<ApiObject> ApiClient::GetObjects(const String& type,
+    const std::vector<String>& names, const std::vector<String>& attrs) const
+{
+	return std::vector<ApiObject>();
+}
+
+String ApiClient::GetPluralTypeName(const String& type)
+{
+	if (type[type.GetLength() - 1] == 'y')
+		return type.SubStr(0, type.GetLength() - 1) + "ies";
+	else
+		return type + "s";
+}

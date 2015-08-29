@@ -20,7 +20,7 @@
 #ifndef API_H
 #define API_H
 
-#include "base/string.hpp"
+#include "base/value.hpp"
 #include <vector>
 
 namespace icinga

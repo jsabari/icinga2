@@ -30,31 +30,34 @@ class IcingaStudio : public wxApp
 public:
 	virtual bool OnInit(void) override
 	{
-		m_Config = new wxConfig("IcingaStudio");
+		Url::Ptr pUrl;
 
-		wxString wurl;
+		if (argc < 2) {
+			wxConfig config("IcingaStudio");
+			wxString wUrl;
 
-		if (!m_Config->Read("url", &wurl))
-			wurl = "https://localhost:5665/";
+			if (!config.Read("url", &wUrl))
+				wUrl = "https://localhost:5665/";
 
-		std::string url = wurl.ToStdString();
+			std::string url = wUrl.ToStdString();
 
-		ConnectForm f(NULL, new Url(url));
-		if (f.ShowModal() != wxID_OK)
-			return false;
+			ConnectForm f(NULL, new Url(url));
+			if (f.ShowModal() != wxID_OK)
+				return false;
 
-		url = f.GetUrl()->Format();
-		wurl = url;
-		m_Config->Write("url", wurl);
+			pUrl = f.GetUrl();
+			url = pUrl->Format();
+			wUrl = url;
+			config.Write("url", wUrl);
+		} else {
+			pUrl = new Url(argv[1].ToStdString());
+		}
 
-		MainForm *m = new MainForm(NULL);
+		MainForm *m = new MainForm(NULL, pUrl);
 		m->Show();
 
 		return true;
 	}
-
-private:
-	wxConfig *m_Config;
 };
 
 wxIMPLEMENT_APP(IcingaStudio);

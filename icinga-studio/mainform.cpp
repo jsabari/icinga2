@@ -19,10 +19,17 @@
 
 #include "icinga-studio/mainform.hpp"
 
-MainForm::MainForm(wxWindow *parent)
+using namespace icinga;
+
+MainForm::MainForm(wxWindow *parent, const Url::Ptr& url)
 	: MainFormBase(parent)
 {
 #ifdef _WIN32
 	SetIcon(wxICON(icinga));
 #endif /* _WIN32 */
+	
+	std::string sUrl = url->Format();
+	SetTitle(sUrl + " - Icinga Studio");
+
+	m_ApiClient = new ApiClient("mon.shroudbox.net", 5665, "root", "U1aIqWl4UnQP");
 }

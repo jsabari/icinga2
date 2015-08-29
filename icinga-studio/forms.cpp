@@ -13,26 +13,26 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
-	wxBoxSizer* bSizer8;
-	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	wxBoxSizer* m_DialogSizer;
+	m_DialogSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_treeCtrl1 = new wxTreeCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
-	bSizer8->Add( m_treeCtrl1, 0, wxALL|wxEXPAND, 5 );
+	m_TypesTree = new wxTreeCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTR_DEFAULT_STYLE );
+	m_DialogSizer->Add( m_TypesTree, 0, wxALL|wxEXPAND, 5 );
 	
-	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* m_ObjectDetailsSizer;
+	m_ObjectDetailsSizer = new wxBoxSizer( wxVERTICAL );
 	
-	m_listCtrl1 = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	bSizer9->Add( m_listCtrl1, 0, wxALL|wxEXPAND, 5 );
+	m_ObjectsList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	m_ObjectDetailsSizer->Add( m_ObjectsList, 0, wxALL|wxEXPAND, 5 );
 	
-	m_listCtrl2 = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	bSizer9->Add( m_listCtrl2, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer8->Add( bSizer9, 1, wxEXPAND, 5 );
+	m_PropertiesList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	m_ObjectDetailsSizer->Add( m_PropertiesList, 0, wxALL|wxEXPAND, 5 );
 	
 	
-	this->SetSizer( bSizer8 );
+	m_DialogSizer->Add( m_ObjectDetailsSizer, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( m_DialogSizer );
 	this->Layout();
 	
 	this->Centre( wxBOTH );
@@ -49,10 +49,12 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	wxBoxSizer* m_DialogSizer;
 	m_DialogSizer = new wxBoxSizer( wxVERTICAL );
 	
+	wxPanel* m_ConnectionDetailsPanel;
 	m_ConnectionDetailsPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxStaticBoxSizer* m_DetailsSizer;
 	m_DetailsSizer = new wxStaticBoxSizer( new wxStaticBox( m_ConnectionDetailsPanel, wxID_ANY, wxT("Connection Details") ), wxVERTICAL );
 	
+	wxStaticText* m_HostLabel;
 	m_HostLabel = new wxStaticText( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxT("Host:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_HostLabel->Wrap( -1 );
 	m_DetailsSizer->Add( m_HostLabel, 0, wxALL, 5 );
@@ -60,6 +62,7 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	m_HostText = new wxTextCtrl( m_DetailsSizer->GetStaticBox(), wxID_OK, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_DetailsSizer->Add( m_HostText, 0, wxALL|wxEXPAND, 5 );
 	
+	wxStaticText* m_PortLabel;
 	m_PortLabel = new wxStaticText( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxT("Port:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_PortLabel->Wrap( -1 );
 	m_DetailsSizer->Add( m_PortLabel, 0, wxALL, 5 );
@@ -67,6 +70,7 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	m_PortText = new wxTextCtrl( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_DetailsSizer->Add( m_PortText, 0, wxALL, 5 );
 	
+	wxStaticText* m_UserLabel;
 	m_UserLabel = new wxStaticText( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxT("API User:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_UserLabel->Wrap( -1 );
 	m_DetailsSizer->Add( m_UserLabel, 0, wxALL, 5 );
@@ -74,6 +78,7 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	m_UserText = new wxTextCtrl( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_DetailsSizer->Add( m_UserText, 0, wxALL|wxEXPAND, 5 );
 	
+	wxStaticText* m_PasswordLabel;
 	m_PasswordLabel = new wxStaticText( m_DetailsSizer->GetStaticBox(), wxID_ANY, wxT("API Password:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_PasswordLabel->Wrap( -1 );
 	m_DetailsSizer->Add( m_PasswordLabel, 0, wxALL, 5 );

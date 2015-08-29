@@ -42,12 +42,6 @@ class MainFormBase : public wxFrame
 	private:
 	
 	protected:
-		enum
-		{
-			ID_CONNECT = 1000,
-			wxID_QUIT
-		};
-		
 		wxMenuBar* m_MenuBar;
 		wxMenu* m_FileMenu;
 		wxMenu* m_HelpMenu;
@@ -63,7 +57,7 @@ class MainFormBase : public wxFrame
 	
 	public:
 		
-		MainFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 1022,632 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainFormBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Icinga Studio"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 800,569 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~MainFormBase();
 	

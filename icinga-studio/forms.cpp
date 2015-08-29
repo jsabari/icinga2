@@ -13,16 +13,12 @@
 
 MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxSize( 800,569 ), wxDefaultSize );
 	
 	m_MenuBar = new wxMenuBar( 0 );
 	m_FileMenu = new wxMenu();
-	wxMenuItem* m_ConnectMenuItem;
-	m_ConnectMenuItem = new wxMenuItem( m_FileMenu, ID_CONNECT, wxString( wxT("&Connect...") ) , wxEmptyString, wxITEM_NORMAL );
-	m_FileMenu->Append( m_ConnectMenuItem );
-	
 	wxMenuItem* m_QuitMenuItem;
-	m_QuitMenuItem = new wxMenuItem( m_FileMenu, wxID_QUIT, wxString( wxT("&Quit") ) , wxEmptyString, wxITEM_NORMAL );
+	m_QuitMenuItem = new wxMenuItem( m_FileMenu, wxID_EXIT, wxString( wxT("&Quit") ) , wxEmptyString, wxITEM_NORMAL );
 	m_FileMenu->Append( m_QuitMenuItem );
 	
 	m_MenuBar->Append( m_FileMenu, wxT("&File") ); 
@@ -75,7 +71,7 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 MainFormBase::~MainFormBase()
 {
 	// Disconnect Events
-	this->Disconnect( wxID_QUIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnQuitClicked ) );
+	this->Disconnect( wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnQuitClicked ) );
 	this->Disconnect( wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnAboutClicked ) );
 	
 }
@@ -173,11 +169,14 @@ AboutFormBase::AboutFormBase( wxWindow* parent, wxWindowID id, const wxString& t
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
 	wxBoxSizer* m_DialogSizer;
-	m_DialogSizer = new wxBoxSizer( wxHORIZONTAL );
+	m_DialogSizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* m_InfoSizer;
+	m_InfoSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxStaticBitmap* m_ProductIcon;
 	m_ProductIcon = new wxStaticBitmap( this, wxID_ANY, wxBitmap( icinga_xpm ), wxDefaultPosition, wxDefaultSize, 0 );
-	m_DialogSizer->Add( m_ProductIcon, 0, wxALL, 5 );
+	m_InfoSizer->Add( m_ProductIcon, 0, wxALL, 5 );
 	
 	wxBoxSizer* m_AboutInfoSizer;
 	m_AboutInfoSizer = new wxBoxSizer( wxVERTICAL );
@@ -196,12 +195,15 @@ AboutFormBase::AboutFormBase( wxWindow* parent, wxWindowID id, const wxString& t
 	m_CopyrightLabel->Wrap( -1 );
 	m_AboutInfoSizer->Add( m_CopyrightLabel, 0, wxALL, 5 );
 	
+	
+	m_InfoSizer->Add( m_AboutInfoSizer, 1, wxEXPAND, 5 );
+	
+	
+	m_DialogSizer->Add( m_InfoSizer, 1, wxEXPAND, 5 );
+	
 	wxButton* m_OKButton;
 	m_OKButton = new wxButton( this, wxID_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_AboutInfoSizer->Add( m_OKButton, 0, wxALIGN_RIGHT|wxALL, 5 );
-	
-	
-	m_DialogSizer->Add( m_AboutInfoSizer, 1, wxEXPAND, 5 );
+	m_DialogSizer->Add( m_OKButton, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	
 	this->SetSizer( m_DialogSizer );

@@ -27,6 +27,7 @@ MainForm::MainForm(wxWindow *parent, const Url::Ptr& url)
 {
 #ifdef _WIN32
 	SetIcon(wxICON(icinga));
+	SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
 #endif /* _WIN32 */
 
 	std::string sUrl = url->Format();

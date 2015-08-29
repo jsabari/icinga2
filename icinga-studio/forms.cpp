@@ -41,16 +41,16 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_ConnectionDetailsSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_TypesTree = new wxTreeCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 315,-1 ), wxTR_DEFAULT_STYLE );
-	m_ConnectionDetailsSizer->Add( m_TypesTree, 0, wxALL|wxEXPAND, 0 );
+	m_ConnectionDetailsSizer->Add( m_TypesTree, 0, wxALL|wxEXPAND, 2 );
 	
 	wxBoxSizer* m_ObjectDetailsSizer;
 	m_ObjectDetailsSizer = new wxBoxSizer( wxVERTICAL );
 	
 	m_ObjectsList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	m_ObjectDetailsSizer->Add( m_ObjectsList, 1, wxALL|wxEXPAND, 0 );
+	m_ObjectDetailsSizer->Add( m_ObjectsList, 1, wxALL|wxEXPAND, 2 );
 	
 	m_PropertiesList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	m_ObjectDetailsSizer->Add( m_PropertiesList, 1, wxALL|wxEXPAND, 0 );
+	m_ObjectDetailsSizer->Add( m_PropertiesList, 1, wxALL|wxEXPAND, 2 );
 	
 	
 	m_ConnectionDetailsSizer->Add( m_ObjectDetailsSizer, 1, wxEXPAND, 5 );

@@ -16,13 +16,17 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	this->SetSizeHints( wxSize( 800,569 ), wxDefaultSize );
 	
 	m_MenuBar = new wxMenuBar( 0 );
+	wxMenu* m_FileMenu;
 	m_FileMenu = new wxMenu();
+	wxMenuItem* m_QuitMenuItem;
 	m_QuitMenuItem = new wxMenuItem( m_FileMenu, wxID_EXIT, wxString( wxT("&Quit") ) , wxEmptyString, wxITEM_NORMAL );
 	m_FileMenu->Append( m_QuitMenuItem );
 	
 	m_MenuBar->Append( m_FileMenu, wxT("&File") ); 
 	
+	wxMenu* m_HelpMenu;
 	m_HelpMenu = new wxMenu();
+	wxMenuItem* m_AboutMenuItem;
 	m_AboutMenuItem = new wxMenuItem( m_HelpMenu, wxID_ABOUT, wxString( wxT("&About Icinga Studio...") ) , wxEmptyString, wxITEM_NORMAL );
 	m_HelpMenu->Append( m_AboutMenuItem );
 	

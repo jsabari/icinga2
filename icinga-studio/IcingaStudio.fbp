@@ -136,7 +136,7 @@
                 <object class="wxMenu" expanded="1">
                     <property name="label">&amp;File</property>
                     <property name="name">m_FileMenu</property>
-                    <property name="permission">protected</property>
+                    <property name="permission">none</property>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
@@ -146,7 +146,7 @@
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Quit</property>
                         <property name="name">m_QuitMenuItem</property>
-                        <property name="permission">protected</property>
+                        <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnQuitClicked</event>
@@ -156,7 +156,7 @@
                 <object class="wxMenu" expanded="1">
                     <property name="label">&amp;Help</property>
                     <property name="name">m_HelpMenu</property>
-                    <property name="permission">protected</property>
+                    <property name="permission">none</property>
                     <object class="wxMenuItem" expanded="1">
                         <property name="bitmap"></property>
                         <property name="checked">0</property>
@@ -166,7 +166,7 @@
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;About Icinga Studio...</property>
                         <property name="name">m_AboutMenuItem</property>
-                        <property name="permission">protected</property>
+                        <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnAboutClicked</event>

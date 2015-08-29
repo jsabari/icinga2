@@ -43,10 +43,6 @@ class MainFormBase : public wxFrame
 	
 	protected:
 		wxMenuBar* m_MenuBar;
-		wxMenu* m_FileMenu;
-		wxMenuItem* m_QuitMenuItem;
-		wxMenu* m_HelpMenu;
-		wxMenuItem* m_AboutMenuItem;
 		wxTreeCtrl* m_TypesTree;
 		wxListCtrl* m_ObjectsList;
 		wxListCtrl* m_PropertiesList;

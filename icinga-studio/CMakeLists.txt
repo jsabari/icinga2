@@ -58,4 +58,6 @@ endif()
 install(
   TARGETS icinga-studio
   RUNTIME DESTINATION ${InstallPath}
+  BUNDLE DESTINATION ${InstallPath}
 )
+

@@ -37,7 +37,7 @@ public:
 		if (!m_Config->Read("url", &wurl))
 			wurl = "https://localhost:5665/";
 
-		std::string url = wurl;
+		std::string url = wurl.ToStdString();
 
 		ConnectForm f(NULL, new Url(url));
 		if (f.ShowModal() != wxID_OK)

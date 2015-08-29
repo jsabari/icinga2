@@ -61,8 +61,8 @@ void ConnectForm::OnResizeInfoLabel(wxSizeEvent& event)
 
 Url::Ptr ConnectForm::GetUrl(void) const
 {
-	String url = "https://" + m_UserText->GetValue() + ":" + m_PasswordText->GetValue()
+	wxString url = "https://" + m_UserText->GetValue() + ":" + m_PasswordText->GetValue()
 	    + "@" + m_HostText->GetValue() + ":" + m_PortText->GetValue() + "/";
 
-	return new Url(url);
+	return new Url(url.ToStdString());
 }

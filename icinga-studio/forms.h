@@ -67,8 +67,6 @@ class MainFormBase : public wxFrame
 class ConnectFormBase : public wxDialog 
 {
 	private:
-		wxButton* m_OKButton;
-		wxButton* m_CancelButton;
 	
 	protected:
 		wxTextCtrl* m_HostText;
@@ -76,11 +74,12 @@ class ConnectFormBase : public wxDialog
 		wxTextCtrl* m_UserText;
 		wxTextCtrl* m_PasswordText;
 		wxStaticText* m_InfoLabel;
+		wxStdDialogButtonSizer* m_sdbSizer1;
+		wxButton* m_sdbSizer1OK;
+		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnResizeInfoLabel( wxSizeEvent& event ) { event.Skip(); }
-		virtual void OnOKClicked( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCancelClicked( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
@@ -99,6 +98,8 @@ class AboutFormBase : public wxDialog
 	
 	protected:
 		wxStaticText* m_VersionLabel;
+		wxStdDialogButtonSizer* m_sdbSizer2;
+		wxButton* m_sdbSizer2OK;
 	
 	public:
 		

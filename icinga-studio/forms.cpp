@@ -135,14 +135,17 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	wxBoxSizer* m_ButtonsSizer;
 	m_ButtonsSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_OKButton = new wxButton( this, wxID_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_ButtonsSizer->Add( m_OKButton, 0, wxALL, 5 );
+	m_sdbSizer1 = new wxStdDialogButtonSizer();
+	m_sdbSizer1OK = new wxButton( this, wxID_OK );
+	m_sdbSizer1->AddButton( m_sdbSizer1OK );
+	m_sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer1->AddButton( m_sdbSizer1Cancel );
+	m_sdbSizer1->Realize();
 	
-	m_CancelButton = new wxButton( this, wxID_CANCEL, wxT("Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_ButtonsSizer->Add( m_CancelButton, 0, wxALL, 5 );
+	m_ButtonsSizer->Add( m_sdbSizer1, 1, wxEXPAND, 5 );
 	
 	
-	m_DialogSizer->Add( m_ButtonsSizer, 0, wxEXPAND, 5 );
+	m_DialogSizer->Add( m_ButtonsSizer, 0, wxALIGN_RIGHT|wxEXPAND, 5 );
 	
 	
 	this->SetSizer( m_DialogSizer );
@@ -153,16 +156,12 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	// Connect Events
 	m_InfoLabel->Connect( wxEVT_SIZE, wxSizeEventHandler( ConnectFormBase::OnResizeInfoLabel ), NULL, this );
-	m_OKButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnOKClicked ), NULL, this );
-	m_CancelButton->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnCancelClicked ), NULL, this );
 }
 
 ConnectFormBase::~ConnectFormBase()
 {
 	// Disconnect Events
 	m_InfoLabel->Disconnect( wxEVT_SIZE, wxSizeEventHandler( ConnectFormBase::OnResizeInfoLabel ), NULL, this );
-	m_OKButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnOKClicked ), NULL, this );
-	m_CancelButton->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ConnectFormBase::OnCancelClicked ), NULL, this );
 	
 }
 
@@ -203,9 +202,12 @@ AboutFormBase::AboutFormBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_DialogSizer->Add( m_InfoSizer, 1, wxEXPAND, 5 );
 	
-	wxButton* m_OKButton;
-	m_OKButton = new wxButton( this, wxID_OK, wxT("OK"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_DialogSizer->Add( m_OKButton, 0, wxALIGN_CENTER|wxALL, 5 );
+	m_sdbSizer2 = new wxStdDialogButtonSizer();
+	m_sdbSizer2OK = new wxButton( this, wxID_OK );
+	m_sdbSizer2->AddButton( m_sdbSizer2OK );
+	m_sdbSizer2->Realize();
+	
+	m_DialogSizer->Add( m_sdbSizer2, 0, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( m_DialogSizer );

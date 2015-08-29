@@ -132,20 +132,28 @@ ConnectFormBase::ConnectFormBase( wxWindow* parent, wxWindowID id, const wxStrin
 	m_DetailsSizer->Fit( m_ConnectionDetailsPanel );
 	m_DialogSizer->Add( m_ConnectionDetailsPanel, 1, wxEXPAND | wxALL, 5 );
 	
+	wxPanel* m_ButtonsPanel;
+	m_ButtonsPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* m_ButtonsSizer;
 	m_ButtonsSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_sdbSizer1 = new wxStdDialogButtonSizer();
-	m_sdbSizer1OK = new wxButton( this, wxID_OK );
-	m_sdbSizer1->AddButton( m_sdbSizer1OK );
-	m_sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
-	m_sdbSizer1->AddButton( m_sdbSizer1Cancel );
-	m_sdbSizer1->Realize();
+	wxStdDialogButtonSizer* m_Buttons;
+	wxButton* m_ButtonsOK;
+	wxButton* m_ButtonsCancel;
+	m_Buttons = new wxStdDialogButtonSizer();
+	m_ButtonsOK = new wxButton( m_ButtonsPanel, wxID_OK );
+	m_Buttons->AddButton( m_ButtonsOK );
+	m_ButtonsCancel = new wxButton( m_ButtonsPanel, wxID_CANCEL );
+	m_Buttons->AddButton( m_ButtonsCancel );
+	m_Buttons->Realize();
 	
-	m_ButtonsSizer->Add( m_sdbSizer1, 1, wxEXPAND, 5 );
+	m_ButtonsSizer->Add( m_Buttons, 1, wxEXPAND, 5 );
 	
 	
-	m_DialogSizer->Add( m_ButtonsSizer, 0, wxALIGN_RIGHT|wxEXPAND, 5 );
+	m_ButtonsPanel->SetSizer( m_ButtonsSizer );
+	m_ButtonsPanel->Layout();
+	m_ButtonsSizer->Fit( m_ButtonsPanel );
+	m_DialogSizer->Add( m_ButtonsPanel, 0, wxEXPAND | wxALL, 5 );
 	
 	
 	this->SetSizer( m_DialogSizer );
@@ -202,12 +210,25 @@ AboutFormBase::AboutFormBase( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	m_DialogSizer->Add( m_InfoSizer, 1, wxEXPAND, 5 );
 	
-	m_sdbSizer2 = new wxStdDialogButtonSizer();
-	m_sdbSizer2OK = new wxButton( this, wxID_OK );
-	m_sdbSizer2->AddButton( m_sdbSizer2OK );
-	m_sdbSizer2->Realize();
+	wxPanel* m_ButtonsPanel;
+	m_ButtonsPanel = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* m_ButtonsSizer;
+	m_ButtonsSizer = new wxBoxSizer( wxVERTICAL );
 	
-	m_DialogSizer->Add( m_sdbSizer2, 0, wxEXPAND, 5 );
+	wxStdDialogButtonSizer* m_Buttons;
+	wxButton* m_ButtonsOK;
+	m_Buttons = new wxStdDialogButtonSizer();
+	m_ButtonsOK = new wxButton( m_ButtonsPanel, wxID_OK );
+	m_Buttons->AddButton( m_ButtonsOK );
+	m_Buttons->Realize();
+	
+	m_ButtonsSizer->Add( m_Buttons, 0, wxEXPAND, 5 );
+	
+	
+	m_ButtonsPanel->SetSizer( m_ButtonsSizer );
+	m_ButtonsPanel->Layout();
+	m_ButtonsSizer->Fit( m_ButtonsPanel );
+	m_DialogSizer->Add( m_ButtonsPanel, 0, wxEXPAND | wxALL, 5 );
 	
 	
 	this->SetSizer( m_DialogSizer );

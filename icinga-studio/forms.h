@@ -74,9 +74,6 @@ class ConnectFormBase : public wxDialog
 		wxTextCtrl* m_UserText;
 		wxTextCtrl* m_PasswordText;
 		wxStaticText* m_InfoLabel;
-		wxStdDialogButtonSizer* m_sdbSizer1;
-		wxButton* m_sdbSizer1OK;
-		wxButton* m_sdbSizer1Cancel;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnResizeInfoLabel( wxSizeEvent& event ) { event.Skip(); }
@@ -98,8 +95,6 @@ class AboutFormBase : public wxDialog
 	
 	protected:
 		wxStaticText* m_VersionLabel;
-		wxStdDialogButtonSizer* m_sdbSizer2;
-		wxButton* m_sdbSizer2OK;
 	
 	public:
 		

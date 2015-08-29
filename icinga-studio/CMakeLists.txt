@@ -19,12 +19,24 @@ set(wxWidgets_CONFIGURATION mswu)
 find_package(wxWidgets COMPONENTS core base REQUIRED)
 include(${wxWidgets_USE_FILE})
 
-add_executable(icinga-studio WIN32 icinga-studio.cpp forms.cpp connectform.cpp mainform.cpp)
+add_executable(icinga-studio MACOSX_BUNDLE WIN32 icinga-studio.cpp forms.cpp connectform.cpp mainform.cpp icinga.icns)
 target_link_libraries(icinga-studio ${wxWidgets_LIBRARIES})
+
+if(APPLE)
+  set_source_files_properties(icinga.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+endif()
 
 set_target_properties (
   icinga-studio PROPERTIES
   INSTALL_RPATH ${CMAKE_INSTALL_FULL_LIBDIR}/icinga2
   FOLDER Bin
   OUTPUT_NAME icinga-studio
+  MACOSX_BUNDLE_INFO_STRING "Icinga Studio"
+  MACOSX_BUNDLE_BUNDLE_NAME "Icinga Studio"
+  MACOSX_BUNDLE_GUI_IDENTIFIER "Icinga Studio"
+  MACOSX_BUNDLE_ICON_FILE icinga.icns
+  MACOSX_BUNDLE_SHORT_VERSION_STRING "${GIT_VERSION}"
+  MACOSX_BUNDLE_LONG_VERSION_STRING "${GIT_VERSION}"
+  MACOSX_BUNDLE_COPYRIGHT "© Icinga Development Team"
+  MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist.in"
 )

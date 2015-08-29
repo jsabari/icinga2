@@ -29,6 +29,13 @@ MainForm::MainForm(wxWindow *parent, const Url::Ptr& url)
 	SetIcon(wxICON(icinga));
 #endif /* _WIN32 */
 	
+#ifdef __WXOSX__
+	m_MenuBar->Remove(0);
+	m_MenuBar->Remove(0);
+	m_MenuBar->Append(m_QuitMenuItem);
+	m_MenuBar->Append(m_AboutMenuItem);
+#endif /* __WXOSX__ */
+
 	std::string sUrl = url->Format();
 	SetTitle(sUrl + " - Icinga Studio");
 

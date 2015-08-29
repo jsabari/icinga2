@@ -146,7 +146,7 @@
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;Quit</property>
                         <property name="name">m_QuitMenuItem</property>
-                        <property name="permission">none</property>
+                        <property name="permission">protected</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnQuitClicked</event>
@@ -166,7 +166,7 @@
                         <property name="kind">wxITEM_NORMAL</property>
                         <property name="label">&amp;About Icinga Studio...</property>
                         <property name="name">m_AboutMenuItem</property>
-                        <property name="permission">none</property>
+                        <property name="permission">protected</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnAboutClicked</event>

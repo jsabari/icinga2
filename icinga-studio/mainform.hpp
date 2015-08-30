@@ -34,12 +34,18 @@ public:
 
 	virtual void OnQuitClicked(wxCommandEvent& event) override;
 	virtual void OnAboutClicked(wxCommandEvent& event) override;
+	virtual void OnTypeSelected(wxTreeEvent& event) override;
+	virtual void OnObjectSelected(wxListEvent& event) override;
 
 private:
 	ApiClient::Ptr m_ApiClient;
-	wxTreeItemId m_TypesRoot;
+	std::map<String, ApiType::Ptr> m_Types;
 
 	void TypesCompletionHandler(const std::vector<ApiType::Ptr>& types, bool forward);
+	void ObjectsCompletionHandler(const std::vector<ApiObject::Ptr>& objects, bool forward);
+	void ObjectDetailsCompletionHandler(const std::vector<ApiObject::Ptr>& objects, bool forward);
+
+	wxPGProperty *ValueToProperty(const String& name, const Value& value);
 };
 
 }

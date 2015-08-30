@@ -49,8 +49,8 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	m_ObjectsList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
 	m_ObjectDetailsSizer->Add( m_ObjectsList, 1, wxALL|wxEXPAND, 2 );
 	
-	m_PropertiesList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
-	m_ObjectDetailsSizer->Add( m_PropertiesList, 1, wxALL|wxEXPAND, 2 );
+	m_PropertyGrid = new wxPropertyGrid(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPG_DEFAULT_STYLE);
+	m_ObjectDetailsSizer->Add( m_PropertyGrid, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	m_ConnectionDetailsSizer->Add( m_ObjectDetailsSizer, 1, wxEXPAND, 5 );
@@ -68,6 +68,8 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	// Connect Events
 	this->Connect( m_QuitMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnQuitClicked ) );
 	this->Connect( m_AboutMenuItem->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnAboutClicked ) );
+	m_TypesTree->Connect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFormBase::OnTypeSelected ), NULL, this );
+	m_ObjectsList->Connect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFormBase::OnObjectSelected ), NULL, this );
 }
 
 MainFormBase::~MainFormBase()
@@ -75,6 +77,8 @@ MainFormBase::~MainFormBase()
 	// Disconnect Events
 	this->Disconnect( wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnQuitClicked ) );
 	this->Disconnect( wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainFormBase::OnAboutClicked ) );
+	m_TypesTree->Disconnect( wxEVT_COMMAND_TREE_SEL_CHANGED, wxTreeEventHandler( MainFormBase::OnTypeSelected ), NULL, this );
+	m_ObjectsList->Disconnect( wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler( MainFormBase::OnObjectSelected ), NULL, this );
 	
 }
 

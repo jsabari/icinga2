@@ -24,6 +24,7 @@
 #include "remote/httpresponse.hpp"
 #include "base/stream.hpp"
 #include "base/timer.hpp"
+#include <deque>
 
 namespace icinga
 {
@@ -59,7 +60,7 @@ private:
 	String m_Port;
 	bool m_Tls;
 	Stream::Ptr m_Stream;
-	std::vector<std::pair<boost::shared_ptr<HttpRequest>, HttpCompletionCallback> > m_Requests;
+	std::deque<std::pair<boost::shared_ptr<HttpRequest>, HttpCompletionCallback> > m_Requests;
 	boost::shared_ptr<HttpResponse> m_CurrentResponse;
 	boost::mutex m_DataHandlerMutex;
 

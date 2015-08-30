@@ -38,11 +38,17 @@ HttpClientConnection::HttpClientConnection(const String& host, const String& por
 
 void HttpClientConnection::Start(void)
 {
-	Reconnect();
+	/* Nothing to do here atm. */
 }
 
 void HttpClientConnection::Reconnect(void)
 {
+	if (m_Stream)
+		m_Stream->Close();
+
+	m_Context.~StreamReadContext();
+	new (&m_Context) StreamReadContext();
+
 	TcpSocket::Ptr socket = new TcpSocket();
 	socket->Connect(m_Host, m_Port);
 
@@ -113,6 +119,7 @@ bool HttpClientConnection::ProcessMessage(void)
 	if (response.Complete) {
 		callback(request, response);
 
+		m_Requests.pop_front();
 		m_CurrentResponse.reset();
 
 		return true;
@@ -138,7 +145,7 @@ void HttpClientConnection::DataAvailableHandler(void)
 
 boost::shared_ptr<HttpRequest> HttpClientConnection::NewRequest(void)
 {
-	ASSERT(m_Stream);
+	Reconnect();
 	return boost::make_shared<HttpRequest>(m_Stream);
 }
 

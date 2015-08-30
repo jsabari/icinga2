@@ -21,6 +21,8 @@
 #include <wx/settings.h>
 #include <wx/treectrl.h>
 #include <wx/listctrl.h>
+#include <wx/propgrid/propgrid.h>
+#include <wx/propgrid/advprops.h>
 #include <wx/sizer.h>
 #include <wx/statusbr.h>
 #include <wx/frame.h>
@@ -45,12 +47,14 @@ class MainFormBase : public wxFrame
 		wxMenuBar* m_MenuBar;
 		wxTreeCtrl* m_TypesTree;
 		wxListCtrl* m_ObjectsList;
-		wxListCtrl* m_PropertiesList;
+		wxPropertyGrid* m_PropertyGrid;
 		wxStatusBar* m_StatusBar;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnQuitClicked( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnAboutClicked( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnTypeSelected( wxTreeEvent& event ) { event.Skip(); }
+		virtual void OnObjectSelected( wxListEvent& event ) { event.Skip(); }
 		
 	
 	public:

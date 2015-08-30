@@ -70,9 +70,11 @@ public:
 	String Type;
 };
 
-struct ApiObject
+struct ApiObject : public Object
 {
 public:
+	DECLARE_PTR_TYPEDEFS(ApiObject);
+
 	std::map<String, Value> Attrs;
 	std::vector<ApiObjectReference> UsedBy;
 };
@@ -88,7 +90,8 @@ public:
 	typedef boost::function<void(const std::vector<ApiType::Ptr>&)> TypesCompletionCallback;
 	void GetTypes(const TypesCompletionCallback& callback) const;
 
-	std::vector<ApiObject> GetObjects(const String& type,
+	typedef boost::function<void(const std::vector<ApiObject::Ptr>&)> ObjectsCompletionCallback;
+	void GetObjects(const String& pluralType, const ObjectsCompletionCallback& callback,
 	    const std::vector<String>& names = std::vector<String>(),
 	    const std::vector<String>& attrs = std::vector<String>()) const;
 
@@ -97,7 +100,10 @@ private:
 	String m_User;
 	String m_Password;
 
-	static void TypesHttpCompletionCallback(HttpRequest& request, HttpResponse& response, const TypesCompletionCallback& callback);
+	static void TypesHttpCompletionCallback(HttpRequest& request,
+	    HttpResponse& response, const TypesCompletionCallback& callback);
+	static void ObjectsHttpCompletionCallback(HttpRequest& request,
+	    HttpResponse& response, const ObjectsCompletionCallback& callback);
 };
 
 }

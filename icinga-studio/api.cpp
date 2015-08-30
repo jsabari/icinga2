@@ -20,6 +20,8 @@
 #include "icinga-studio/api.hpp"
 #include "remote/base64.hpp"
 #include "base/json.hpp"
+#include "base/logger.hpp"
+#include "base/exception.hpp"
 #include <boost/foreach.hpp>
 
 using namespace icinga;
@@ -52,28 +54,112 @@ void ApiClient::TypesHttpCompletionCallback(HttpRequest& request, HttpResponse& 
 	while ((count = response.ReadBody(buffer, sizeof(buffer))) > 0)
 		body += String(buffer, buffer + count);
 
-	if (!body.IsEmpty())
-		result = JsonDecode(body);
-
-	Array::Ptr results = result->Get("results");
-
 	std::vector<ApiType::Ptr> types;
 
-	ObjectLock olock(results);
-	BOOST_FOREACH(const Dictionary::Ptr typeInfo, results) {
-		ApiType::Ptr type = new ApiType();;
-		type->Abstract = typeInfo->Get("abstract");
-		type->BaseName = typeInfo->Get("base");
-		type->Name = typeInfo->Get("name");
-		type->PluralName = typeInfo->Get("plural_name");
-		types.push_back(type);
+	try {
+		result = JsonDecode(body);
+
+		Array::Ptr results = result->Get("results");
+
+		ObjectLock olock(results);
+		BOOST_FOREACH(const Dictionary::Ptr typeInfo, results)
+		{
+			ApiType::Ptr type = new ApiType();;
+			type->Abstract = typeInfo->Get("abstract");
+			type->BaseName = typeInfo->Get("base");
+			type->Name = typeInfo->Get("name");
+			type->PluralName = typeInfo->Get("plural_name");
+			// TODO: attributes
+			types.push_back(type);
+		}
+	} catch (const std::exception& ex) {
+		Log(LogCritical, "ApiClient")
+		    << "Error while decoding response: " << DiagnosticInformation(ex);
 	}
 
 	callback(types);
 }
 
-std::vector<ApiObject> ApiClient::GetObjects(const String& type,
+void ApiClient::GetObjects(const String& pluralType, const ObjectsCompletionCallback& callback,
     const std::vector<String>& names, const std::vector<String>& attrs) const
 {
-	return std::vector<ApiObject>();
+	String url = "https://" + m_Connection->GetHost() + ":" + m_Connection->GetPort() + "/v1/" + pluralType;
+	String qp;
+
+	BOOST_FOREACH(const String& name, names) {
+		if (!qp.IsEmpty())
+			qp += "&";
+
+		qp += pluralType.ToLower() + "=" + name;
+	}
+
+	BOOST_FOREACH(const String& attr, attrs) {
+		if (!qp.IsEmpty())
+			qp += "&";
+
+		qp += "attrs[]=" + attr;
+	}
+
+	boost::shared_ptr<HttpRequest> req = m_Connection->NewRequest();
+	req->RequestMethod = "GET";
+	req->RequestUrl = new Url(url + "?" + qp);
+	req->AddHeader("Authorization", "Basic " + Base64::Encode(m_User + ":" + m_Password));
+	m_Connection->SubmitRequest(req, boost::bind(ObjectsHttpCompletionCallback, _1, _2, callback));
+}
+
+void ApiClient::ObjectsHttpCompletionCallback(HttpRequest& request,
+    HttpResponse& response, const ObjectsCompletionCallback& callback)
+{
+	Dictionary::Ptr result;
+
+	String body;
+	char buffer[1024];
+	size_t count;
+
+	while ((count = response.ReadBody(buffer, sizeof(buffer))) > 0)
+		body += String(buffer, buffer + count);
+
+	std::vector<ApiObject::Ptr> objects;
+
+	try {
+		result = JsonDecode(body);
+
+		Array::Ptr results = result->Get("results");
+
+		ObjectLock olock(results);
+		BOOST_FOREACH(const Dictionary::Ptr objectInfo, results)
+		{
+			ApiObject::Ptr object = new ApiObject();
+
+			Dictionary::Ptr attrs = objectInfo->Get("attrs");
+
+			{
+				ObjectLock olock(attrs);
+				BOOST_FOREACH(const Dictionary::Pair& kv, attrs)
+				{
+					object->Attrs[kv.first] = kv.second;
+				}
+			}
+
+			Array::Ptr used_by = objectInfo->Get("used_by");
+
+			{
+				ObjectLock olock(used_by);
+				BOOST_FOREACH(const Dictionary::Ptr& refInfo, used_by)
+				{
+					ApiObjectReference ref;
+					ref.Name = refInfo->Get("name");
+					ref.Type = refInfo->Get("type");
+					object->UsedBy.push_back(ref);
+				}
+			}
+
+			objects.push_back(object);
+		}
+	} catch (const std::exception& ex) {
+		Log(LogCritical, "ApiClient")
+			<< "Error while decoding response: " << DiagnosticInformation(ex);
+	}
+
+	callback(objects);
 }

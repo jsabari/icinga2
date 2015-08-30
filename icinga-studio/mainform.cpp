@@ -70,11 +70,6 @@ MainForm::MainForm(wxWindow *parent, const Url::Ptr& url)
 	SetTitle(title);
 
 	m_ObjectsList->InsertColumn(0, "Name", 0, 300);
-
-	m_PropertiesList->InsertColumn(0, "Name", 0, 250);
-	m_PropertiesList->InsertColumn(1, "Value", 0, 300);
-
-	m_TypesRoot = m_TypesTree->AddRoot("root");
 }
 
 void MainForm::TypesCompletionHandler(const std::vector<ApiType::Ptr>& types, bool forward)
@@ -84,8 +79,13 @@ void MainForm::TypesCompletionHandler(const std::vector<ApiType::Ptr>& types, bo
 		return;
 	}
 
+	m_TypesTree->DeleteAllItems();
+	wxTreeItemId rootNode = m_TypesTree->AddRoot("root");
+
 	bool all = false;
 	std::map<String, wxTreeItemId> items;
+
+	m_Types.clear();
 
 	while (!all) {
 		all = true;
@@ -101,7 +101,7 @@ void MainForm::TypesCompletionHandler(const std::vector<ApiType::Ptr>& types, bo
 			wxTreeItemId parent;
 			
 			if (type->BaseName.IsEmpty())
-				parent = m_TypesRoot;
+				parent = rootNode;
 			else {
 				std::map<String, wxTreeItemId>::const_iterator it = items.find(type->BaseName);
 
@@ -111,8 +111,135 @@ void MainForm::TypesCompletionHandler(const std::vector<ApiType::Ptr>& types, bo
 				parent = it->second;
 			}
 
+			m_Types[name] = type;
 			items[name] = m_TypesTree->AppendItem(parent, name, 0);
 		}
+	}
+}
+
+void MainForm::OnTypeSelected(wxTreeEvent& event)
+{
+	wxTreeItemId selectedId = m_TypesTree->GetSelection();
+	std::string name = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[name];
+
+	std::vector<String> attrs;
+	attrs.push_back(type->Name.ToLower() + ".__name");
+
+	m_ApiClient->GetObjects(type->PluralName, boost::bind(&MainForm::ObjectsCompletionHandler, this, _1, true),
+	    std::vector<String>(), attrs);
+}
+
+void MainForm::ObjectsCompletionHandler(const std::vector<ApiObject::Ptr>& objects, bool forward)
+{
+	if (forward) {
+		CallAfter(boost::bind(&MainForm::ObjectsCompletionHandler, this, objects, false));
+		return;
+	}
+
+	wxTreeItemId selectedId = m_TypesTree->GetSelection();
+	std::string name = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[name];
+
+	String nameAttr = type->Name.ToLower() + ".__name";
+
+	m_ObjectsList->DeleteAllItems();
+
+	BOOST_FOREACH(const ApiObject::Ptr& object, objects) {
+		std::map<String, Value>::const_iterator it = object->Attrs.find(nameAttr);
+		if (it == object->Attrs.end())
+			continue;
+		String name = it->second;
+		m_ObjectsList->InsertItem(0, name.GetData());
+	}
+}
+
+void MainForm::OnObjectSelected(wxListEvent& event)
+{
+	wxTreeItemId selectedId = m_TypesTree->GetSelection();
+	std::string typeName = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[typeName];
+
+	long itemIndex = -1;
+	std::string objectName;
+
+	while ((itemIndex = m_ObjectsList->GetNextItem(itemIndex,
+		wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) != wxNOT_FOUND) {
+		objectName = m_ObjectsList->GetItemText(itemIndex);
+		break;
+	}
+
+	if (objectName.empty())
+		return;
+
+	std::vector<String> names;
+	names.push_back(objectName);
+
+	m_ApiClient->GetObjects(type->PluralName, boost::bind(&MainForm::ObjectDetailsCompletionHandler, this, _1, true), names);
+}
+
+wxPGProperty *MainForm::ValueToProperty(const String& name, const Value& value)
+{
+	wxPGProperty *prop;
+
+	if (value.IsNumber()) {
+		double val = value;
+		return new wxFloatProperty(name.GetData(), wxPG_LABEL, value);
+	} else if (value.IsBoolean()) {
+		bool val = value;
+		return new wxBoolProperty(name.GetData(), wxPG_LABEL, value);
+	} else if (value.IsObjectType<Array>()) {
+		wxArrayString val;
+		Array::Ptr arr = value;
+		ObjectLock olock(arr);
+		BOOST_FOREACH(const Value& aitem, arr)
+		{
+			String val1 = aitem;
+			val.Add(val1.GetData());
+		}
+
+		return new wxArrayStringProperty(name.GetData(), wxPG_LABEL, val);
+	} else if (value.IsObjectType<Dictionary>()) {
+		wxStringProperty *prop = new wxStringProperty(name.GetData(), wxPG_LABEL, "<dictionary>");
+		
+		Dictionary::Ptr dict = value;
+		ObjectLock olock(dict);
+		BOOST_FOREACH(const Dictionary::Pair& kv, dict) {
+			prop->AppendChild(ValueToProperty(kv.first, kv.second));
+		}
+
+		return prop;
+	} else {
+		String val = value;
+		return new wxStringProperty(name.GetData(), wxPG_LABEL, val.GetData());
+	}
+}
+
+void MainForm::ObjectDetailsCompletionHandler(const std::vector<ApiObject::Ptr>& objects, bool forward)
+{
+	if (forward) {
+		CallAfter(boost::bind(&MainForm::ObjectDetailsCompletionHandler, this, objects, false));
+		return;
+	}
+
+	wxTreeItemId selectedId = m_TypesTree->GetSelection();
+	std::string name = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[name];
+
+	String nameAttr = type->Name.ToLower() + ".__name";
+
+	m_PropertyGrid->Clear();
+	
+	if (objects.empty())
+		return;
+
+	ApiObject::Ptr object = objects[0];
+
+	typedef std::pair<String, Value> kv_pair;
+	BOOST_FOREACH(const kv_pair& kv, object->Attrs) {
+		wxPGProperty *prop = ValueToProperty(kv.first, kv.second);
+		m_PropertyGrid->Append(prop);
+		m_PropertyGrid->SetPropertyReadOnly(prop);
 	}
 }
 
@@ -120,7 +247,6 @@ void MainForm::OnQuitClicked(wxCommandEvent& event)
 {
 	Close();
 }
-
 
 void MainForm::OnAboutClicked(wxCommandEvent& event)
 {

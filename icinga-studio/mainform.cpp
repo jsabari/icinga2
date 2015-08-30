@@ -35,8 +35,10 @@ MainForm::MainForm(wxWindow *parent, const Url::Ptr& url)
 
 	String host, port, user, pass;
 
+	std::string authority = url->GetAuthority();
+
 	std::vector<std::string> tokens;
-	boost::algorithm::split(tokens, url->GetAuthority(), boost::is_any_of("@"));
+	boost::algorithm::split(tokens, authority, boost::is_any_of("@"));
 
 	if (tokens.size() > 1) {
 		std::vector<std::string> userinfo;

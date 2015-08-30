@@ -20,6 +20,7 @@
 #ifndef API_H
 #define API_H
 
+#include "remote/httpclientconnection.hpp"
 #include "base/value.hpp"
 #include <vector>
 
@@ -54,6 +55,7 @@ public:
 	DECLARE_PTR_TYPEDEFS(ApiType);
 
 	String Name;
+	String PluralName;
 	String BaseName;
 	ApiType::Ptr Base;
 	bool Abstract;
@@ -80,16 +82,22 @@ class ApiClient : public Object
 public:
 	DECLARE_PTR_TYPEDEFS(ApiClient);
 
-	ApiClient(const String& host, unsigned short port,
+	ApiClient(const String& host, const String& port,
 	    const String& user, const String& password);
 
-	std::vector<ApiType> GetTypes(void) const;
+	typedef boost::function<void(const std::vector<ApiType::Ptr>&)> TypesCompletionCallback;
+	void GetTypes(const TypesCompletionCallback& callback) const;
+
 	std::vector<ApiObject> GetObjects(const String& type,
 	    const std::vector<String>& names = std::vector<String>(),
 	    const std::vector<String>& attrs = std::vector<String>()) const;
 
 private:
-	static String GetPluralTypeName(const String& type);
+	HttpClientConnection::Ptr m_Connection;
+	String m_User;
+	String m_Password;
+
+	static void TypesHttpCompletionCallback(HttpRequest& request, HttpResponse& response, const TypesCompletionCallback& callback);
 };
 
 }

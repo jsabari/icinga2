@@ -17,60 +17,59 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.             *
  ******************************************************************************/
 
-#ifndef HTTPRESPONSE_H
-#define HTTPRESPONSE_H
+#ifndef HTTPSERVERCONNECTION_H
+#define HTTPSERVERCONNECTION_H
 
 #include "remote/httprequest.hpp"
-#include "base/stream.hpp"
-#include "base/fifo.hpp"
+#include "remote/apiuser.hpp"
+#include "base/tlsstream.hpp"
+#include "base/timer.hpp"
+#include "base/workqueue.hpp"
 
 namespace icinga
 {
 
-enum HttpResponseState
-{
-	HttpResponseStart,
-	HttpResponseHeaders,
-	HttpResponseBody,
-	HttpResponseEnd
-};
-
 /**
- * An HTTP response.
+ * An API client connection.
  *
  * @ingroup remote
  */
-struct I2_REMOTE_API HttpResponse
+class I2_REMOTE_API HttpServerConnection : public Object
 {
 public:
-	bool Complete;
+	DECLARE_PTR_TYPEDEFS(HttpServerConnection);
 
-	HttpVersion ProtocolVersion;
-	int StatusCode;
-	String StatusMessage;
+	HttpServerConnection(const String& identity, bool authenticated, const TlsStream::Ptr& stream);
 
-	Dictionary::Ptr Headers;
+	void Start(void);
 
-	HttpResponse(const Stream::Ptr& stream, const HttpRequest& request);
+	ApiUser::Ptr GetApiUser(void) const;
+	bool IsAuthenticated(void) const;
+	TlsStream::Ptr GetStream(void) const;
 
-	bool Parse(StreamReadContext& src, bool may_wait);
-	size_t ReadBody(char *data, size_t count);
-
-	void SetStatus(int code, const String& message);
-	void AddHeader(const String& key, const String& value);
-	void WriteBody(const char *data, size_t count);
-	void Finish(void);
+	void Disconnect(void);
 
 private:
-	HttpResponseState m_State;
-	boost::shared_ptr<ChunkReadContext> m_ChunkContext;
-	const HttpRequest& m_Request;
-	Stream::Ptr m_Stream;
-	FIFO::Ptr m_Body;
+	ApiUser::Ptr m_ApiUser;
+	TlsStream::Ptr m_Stream;
+	double m_Seen;
+	HttpRequest m_CurrentRequest;
+	boost::mutex m_DataHandlerMutex;
+	WorkQueue m_RequestQueue;
+	int m_PendingRequests;
 
-	void FinishHeaders(void);
+	StreamReadContext m_Context;
+
+	bool ProcessMessage(void);
+	void DataAvailableHandler(void);
+
+	static void StaticInitialize(void);
+	static void TimeoutTimerHandler(void);
+	void CheckLiveness(void);
+
+	void ProcessMessageAsync(HttpRequest& request);
 };
 
 }
 
-#endif /* HTTPRESPONSE_H */
+#endif /* HTTPSERVERCONNECTION_H */

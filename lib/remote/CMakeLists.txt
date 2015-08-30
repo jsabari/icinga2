@@ -27,7 +27,7 @@ set(remote_SOURCES
   configfileshandler.cpp configmoduleshandler.cpp configmoduleutility.cpp configobjectutility.cpp
   configstageshandler.cpp createobjecthandler.cpp deleteobjecthandler.cpp
   endpoint.cpp endpoint.thpp filterutility.cpp
-  httpchunkedencoding.cpp  httpconnection.cpp httphandler.cpp httprequest.cpp httpresponse.cpp
+  httpchunkedencoding.cpp httpclientconnection.cpp httpserverconnection.cpp httphandler.cpp httprequest.cpp httpresponse.cpp
   httputility.cpp jsonrpc.cpp jsonrpcconnection.cpp jsonrpcconnection-heartbeat.cpp
   messageorigin.cpp modifyobjecthandler.cpp statusqueryhandler.cpp typequeryhandler.cpp
   url.cpp zone.cpp zone.thpp

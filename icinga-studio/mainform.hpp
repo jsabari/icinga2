@@ -37,6 +37,9 @@ public:
 
 private:
 	ApiClient::Ptr m_ApiClient;
+	wxTreeItemId m_TypesRoot;
+
+	void TypesCompletionHandler(const std::vector<ApiType::Ptr>& types, bool forward);
 };
 
 }

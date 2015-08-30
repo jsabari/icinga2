@@ -19,6 +19,7 @@
 
 #include "icinga-studio/connectform.hpp"
 #include "icinga-studio/mainform.hpp"
+#include "base/application.hpp"
 #include <wx/wx.h>
 #include <wx/app.h>
 #include <wx/config.h>
@@ -30,6 +31,8 @@ class IcingaStudio : public wxApp
 public:
 	virtual bool OnInit(void) override
 	{
+		Application::InitializeBase();
+
 		Url::Ptr pUrl;
 
 		if (argc < 2) {

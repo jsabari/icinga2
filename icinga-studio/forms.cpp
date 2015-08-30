@@ -40,7 +40,7 @@ MainFormBase::MainFormBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	wxBoxSizer* m_ConnectionDetailsSizer;
 	m_ConnectionDetailsSizer = new wxBoxSizer( wxHORIZONTAL );
 	
-	m_TypesTree = new wxTreeCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 315,-1 ), wxTR_DEFAULT_STYLE );
+	m_TypesTree = new wxTreeCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 315,-1 ), wxTR_DEFAULT_STYLE|wxTR_HIDE_ROOT );
 	m_ConnectionDetailsSizer->Add( m_TypesTree, 0, wxALL|wxEXPAND, 2 );
 	
 	wxBoxSizer* m_ObjectDetailsSizer;

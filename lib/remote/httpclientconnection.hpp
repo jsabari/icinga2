@@ -17,59 +17,61 @@
  * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.             *
  ******************************************************************************/
 
-#ifndef HTTPCONNECTION_H
-#define HTTPCONNECTION_H
+#ifndef HTTPCLIENTCONNECTION_H
+#define HTTPCLIENTCONNECTION_H
 
 #include "remote/httprequest.hpp"
-#include "remote/apiuser.hpp"
-#include "base/tlsstream.hpp"
+#include "remote/httpresponse.hpp"
+#include "base/stream.hpp"
 #include "base/timer.hpp"
-#include "base/workqueue.hpp"
 
 namespace icinga
 {
 
 /**
- * An API client connection.
+ * An HTTP client connection.
  *
  * @ingroup remote
  */
-class I2_REMOTE_API HttpConnection : public Object
+class I2_REMOTE_API HttpClientConnection : public Object
 {
 public:
-	DECLARE_PTR_TYPEDEFS(HttpConnection);
+	DECLARE_PTR_TYPEDEFS(HttpClientConnection);
 
-	HttpConnection(const String& identity, bool authenticated, const TlsStream::Ptr& stream);
+	HttpClientConnection(const String& host, const String& port, bool tls = true);
 
 	void Start(void);
 
-	ApiUser::Ptr GetApiUser(void) const;
-	bool IsAuthenticated(void) const;
-	TlsStream::Ptr GetStream(void) const;
+	Stream::Ptr GetStream(void) const;
+	String GetHost(void) const;
+	String GetPort(void) const;
+	bool GetTls(void) const;
 
 	void Disconnect(void);
 
+	boost::shared_ptr<HttpRequest> NewRequest(void);
+
+	typedef boost::function<void(HttpRequest&, HttpResponse&)> HttpCompletionCallback;
+	void SubmitRequest(const boost::shared_ptr<HttpRequest>& request, const HttpCompletionCallback& callback);
+
 private:
-	ApiUser::Ptr m_ApiUser;
-	TlsStream::Ptr m_Stream;
-	double m_Seen;
-	HttpRequest m_CurrentRequest;
+	String m_Host;
+	String m_Port;
+	bool m_Tls;
+	Stream::Ptr m_Stream;
+	std::vector<std::pair<boost::shared_ptr<HttpRequest>, HttpCompletionCallback> > m_Requests;
+	boost::shared_ptr<HttpResponse> m_CurrentResponse;
 	boost::mutex m_DataHandlerMutex;
-	WorkQueue m_RequestQueue;
-	int m_PendingRequests;
 
 	StreamReadContext m_Context;
 
+	void Reconnect(void);
 	bool ProcessMessage(void);
 	void DataAvailableHandler(void);
-
-	static void StaticInitialize(void);
-	static void TimeoutTimerHandler(void);
-	void CheckLiveness(void);
 
 	void ProcessMessageAsync(HttpRequest& request);
 };
 
 }
 
-#endif /* HTTPCONNECTION_H */
+#endif /* HTTPCLIENTCONNECTION_H */

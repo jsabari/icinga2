@@ -120,8 +120,8 @@ void MainForm::TypesCompletionHandler(const std::vector<ApiType::Ptr>& types, bo
 void MainForm::OnTypeSelected(wxTreeEvent& event)
 {
 	wxTreeItemId selectedId = m_TypesTree->GetSelection();
-	std::string name = m_TypesTree->GetItemText(selectedId);
-	ApiType::Ptr type = m_Types[name];
+	wxString typeName = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[typeName.ToStdString()];
 
 	std::vector<String> attrs;
 	attrs.push_back(type->Name.ToLower() + ".__name");
@@ -138,8 +138,8 @@ void MainForm::ObjectsCompletionHandler(const std::vector<ApiObject::Ptr>& objec
 	}
 
 	wxTreeItemId selectedId = m_TypesTree->GetSelection();
-	std::string name = m_TypesTree->GetItemText(selectedId);
-	ApiType::Ptr type = m_Types[name];
+	wxString typeName = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[typeName.ToStdString()];
 
 	String nameAttr = type->Name.ToLower() + ".__name";
 
@@ -157,8 +157,8 @@ void MainForm::ObjectsCompletionHandler(const std::vector<ApiObject::Ptr>& objec
 void MainForm::OnObjectSelected(wxListEvent& event)
 {
 	wxTreeItemId selectedId = m_TypesTree->GetSelection();
-	std::string typeName = m_TypesTree->GetItemText(selectedId);
-	ApiType::Ptr type = m_Types[typeName];
+	wxString typeName = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[typeName.ToStdString()];
 
 	long itemIndex = -1;
 	std::string objectName;
@@ -223,8 +223,8 @@ void MainForm::ObjectDetailsCompletionHandler(const std::vector<ApiObject::Ptr>&
 	}
 
 	wxTreeItemId selectedId = m_TypesTree->GetSelection();
-	std::string name = m_TypesTree->GetItemText(selectedId);
-	ApiType::Ptr type = m_Types[name];
+	wxString typeName = m_TypesTree->GetItemText(selectedId);
+	ApiType::Ptr type = m_Types[typeName.ToStdString()];
 
 	String nameAttr = type->Name.ToLower() + ".__name";
 

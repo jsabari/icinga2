@@ -48,7 +48,8 @@ int Checkable::GetNextDowntimeID(void)
 
 String Checkable::AddDowntime(const String& author, const String& comment,
     double startTime, double endTime, bool fixed,
-    const String& triggeredBy, double duration, const String& scheduledBy,
+    const String& triggeredBy, double duration,
+    const String& scheduledDowntime, const String& scheduledBy,
     const String& id, const MessageOrigin::Ptr& origin)
 {
 	String uid;
@@ -69,6 +70,9 @@ String Checkable::AddDowntime(const String& author, const String& comment,
 	downtime->SetDuration(duration);
 	downtime->SetTriggeredBy(triggeredBy);
 	downtime->SetScheduledBy(scheduledBy);
+
+	if (!scheduledDowntime.IsEmpty())
+		downtime->SetConfigOwner(scheduledDowntime);
 
 	if (!triggeredBy.IsEmpty()) {
 		Downtime::Ptr triggerDowntime = GetDowntimeByID(triggeredBy);
@@ -123,7 +127,7 @@ String Checkable::AddDowntime(const String& author, const String& comment,
 	return uid;
 }
 
-void Checkable::RemoveDowntime(const String& id, bool cancelled, const MessageOrigin::Ptr& origin)
+void Checkable::RemoveDowntime(const String& id, bool cancelled, bool expired, const MessageOrigin::Ptr& origin)
 {
 	Checkable::Ptr owner = GetOwnerByDowntimeID(id);
 
@@ -141,7 +145,7 @@ void Checkable::RemoveDowntime(const String& id, bool cancelled, const MessageOr
 
 	String config_owner = downtime->GetConfigOwner();
 
-	if (!config_owner.IsEmpty()) {
+	if (!config_owner.IsEmpty() && !expired) {
 		Log(LogWarning, "Checkable")
 		    << "Cannot remove downtime with ID '" << legacy_id << "'. It is owned by scheduled downtime object '" << config_owner << "'";
 		return;
@@ -175,7 +179,7 @@ void Checkable::RemoveAllDowntimes(void)
 	}
 
 	BOOST_FOREACH(const String& id, ids) {
-		RemoveDowntime(id, true);
+		RemoveDowntime(id, true, true);
 	}
 }
 
@@ -326,11 +330,7 @@ void Checkable::RemoveExpiredDowntimes(void)
 	}
 
 	BOOST_FOREACH(const String& id, expiredDowntimes) {
-		/* override config owner to clear expired downtimes once */
-		Downtime::Ptr downtime = GetDowntimeByID(id);
-		downtime->SetConfigOwner(Empty);
-
-		RemoveDowntime(id, false);
+		RemoveDowntime(id, false, true);
 	}
 }
 

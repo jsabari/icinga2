@@ -1522,7 +1522,7 @@ Value ApiEvents::DowntimeAddedAPIHandler(const MessageOrigin::Ptr& origin, const
 	checkable->AddDowntime(downtime->GetAuthor(), downtime->GetComment(),
 	    downtime->GetStartTime(), downtime->GetEndTime(),
 	    downtime->GetFixed(), downtime->GetTriggeredBy(),
-	    downtime->GetDuration(), downtime->GetScheduledBy(),
+	    downtime->GetDuration(), downtime->GetConfigOwner(), downtime->GetScheduledBy(),
 	    downtime->GetName(), origin);
 
 	return Empty;
@@ -1587,7 +1587,7 @@ Value ApiEvents::DowntimeRemovedAPIHandler(const MessageOrigin::Ptr& origin, con
 		return Empty;
 	}
 
-	checkable->RemoveDowntime(params->Get("id"), false, origin);
+	checkable->RemoveDowntime(params->Get("id"), false, false, origin);
 
 	return Empty;
 }

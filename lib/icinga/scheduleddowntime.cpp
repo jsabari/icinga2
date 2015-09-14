@@ -198,10 +198,7 @@ void ScheduledDowntime::CreateNextDowntime(void)
 
 	String uid = GetCheckable()->AddDowntime(GetAuthor(), GetComment(),
 	    segment.first, segment.second,
-	    GetFixed(), String(), GetDuration(), GetName());
-
-	Downtime::Ptr downtime = Checkable::GetDowntimeByID(uid);
-	downtime->SetConfigOwner(GetName());
+	    GetFixed(), String(), GetDuration(), GetName(), GetName());
 }
 
 void ScheduledDowntime::ValidateRanges(const Dictionary::Ptr& value, const ValidationUtils& utils)

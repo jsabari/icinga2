@@ -46,14 +46,10 @@ REGISTER_APIACTION(schedule_downtime, "Service;Host", &ApiActions::ScheduleDownt
 REGISTER_APIACTION(remove_downtime, "Service;Host", &ApiActions::RemoveDowntime);
 REGISTER_APIACTION(remove_downtime_by_id, "", &ApiActions::RemoveDowntimeByID);
 
-REGISTER_APIACTION(enable_passive_checks, "Service;Host", &ApiActions::EnablePassiveChecks);
-REGISTER_APIACTION(disable_passive_checks, "Service;Host", &ApiActions::DisablePassiveChecks);
-REGISTER_APIACTION(enable_active_checks, "Host", &ApiActions::EnableActiveChecks);
-REGISTER_APIACTION(disable_active_checks, "Host", &ApiActions::DisableActiveChecks);
-REGISTER_APIACTION(enable_notifications, "Service;Host", &ApiActions::EnableNotifications);
-REGISTER_APIACTION(disable_notifications, "Service;Host", &ApiActions::DisableNotifications);
-REGISTER_APIACTION(enable_flap_detection, "Service;Host", &ApiActions::EnableFlapDetection);
-REGISTER_APIACTION(disable_flap_detection, "Service;Host", &ApiActions::DisableFlapDetection);
+REGISTER_APIACTION(passive_checks, "Service;Host", &ApiActions::PassiveChecks);
+REGISTER_APIACTION(active_checks, "Host", &ApiActions::ActiveChecks);
+REGISTER_APIACTION(notifications, "Service;Host", &ApiActions::Notifications);
+REGISTER_APIACTION(flap_detection, "Service;Host", &ApiActions::FlapDetection);
 
 //TODO-MA. Figure out how to handle modified attributes as actions
 /*
@@ -65,18 +61,12 @@ REGISTER_APIACTION(change_check_interval, "Service;Host", &ApiActions::ChangeChe
 REGISTER_APIACTION(change_retry_interval, "Service;Host", &ApiActions::ChangeRetryInterval);
 */
 
-REGISTER_APIACTION(enable_global_notifications, "", &ApiActions::EnableGlobalNotifications);
-REGISTER_APIACTION(disable_global_notifications, "", &ApiActions::DisableGlobalNotifications);
-REGISTER_APIACTION(enable_global_flap_detection, "", &ApiActions::EnableGlobalFlapDetection);
-REGISTER_APIACTION(disable_global_flap_detection, "", &ApiActions::DisableGlobalFlapDetection);
-REGISTER_APIACTION(enable_global_event_handlers, "", &ApiActions::EnableGlobalEventHandlers);
-REGISTER_APIACTION(disable_global_event_handlers, "", &ApiActions::DisableGlobalEventHandlers);
-REGISTER_APIACTION(enable_global_performance_data, "", &ApiActions::EnableGlobalPerformanceData);
-REGISTER_APIACTION(disable_global_performance_data, "", &ApiActions::DisableGlobalPerformanceData);
-REGISTER_APIACTION(start_global_executing_svc_checks, "", &ApiActions::StartGlobalExecutingSvcChecks);
-REGISTER_APIACTION(stop_global_executing_svc_checks, "", &ApiActions::StopGlobalExecutingSvcChecks);
-REGISTER_APIACTION(start_global_executing_host_checks, "", &ApiActions::StartGlobalExecutingHostChecks);
-REGISTER_APIACTION(stop_global_executing_host_checks, "", &ApiActions::StopGlobalExecutingHostChecks);
+REGISTER_APIACTION(global_notifications, "", &ApiActions::GlobalNotifications);
+REGISTER_APIACTION(global_flap_detection, "", &ApiActions::GlobalFlapDetection);
+REGISTER_APIACTION(global_event_handlers, "", &ApiActions::GlobalEventHandlers);
+REGISTER_APIACTION(global_performance_data, "", &ApiActions::GlobalPerformanceData);
+REGISTER_APIACTION(global_executing_svc_checks, "", &ApiActions::GlobalSvcCheckExecution);
+REGISTER_APIACTION(global_executing_host_checks, "", &ApiActions::GlobalHostCheckExecution);
 
 REGISTER_APIACTION(shutdown_process, "", &ApiActions::ShutdownProcess);
 REGISTER_APIACTION(restart_process, "", &ApiActions::RestartProcess);
@@ -171,52 +161,34 @@ Dictionary::Ptr ApiActions::ProcessCheckResult(const ConfigObject::Ptr& object, 
 	return ApiActions::CreateResult(200, "Successfully processed check result for object " + checkable->GetName() + ".");
 }
 
-Dictionary::Ptr ApiActions::EnablePassiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::PassiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' is required");
+
 	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
 
 	if (!checkable)
-		return ApiActions::CreateResult(404, "Cannot enable passive checks for non-existent object.");
+		return ApiActions::CreateResult(404, "Cannot access passive checks for non-existent object.");
 
-	checkable->SetEnablePassiveChecks(true);
+	checkable->SetEnablePassiveChecks(params->Get("active"));
 
-	return ApiActions::CreateResult(200, "Successfully enabled passive checks for object " + checkable->GetName() + ".");
+	return ApiActions::CreateResult(200, "Successfully " + String((params->Get("active") ? "enabled" : "disabled")) + " passive checks for object " + checkable->GetName() + ".");
 }
 
-Dictionary::Ptr ApiActions::DisablePassiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::ActiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' is required");
+
 	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
 
 	if (!checkable)
-		return ApiActions::CreateResult(404, "Cannot disable passive checks non-existent object.");
+		return ApiActions::CreateResult(404, "Cannot access passive checks for non-existent object.");
 
-	checkable->SetEnablePassiveChecks(false);
+	checkable->SetEnableActiveChecks(params->Get("active"));
 
-	return ApiActions::CreateResult(200, "Successfully disabled passive checks for object " + checkable->GetName() + ".");
-}
-
-Dictionary::Ptr ApiActions::EnableActiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
-
-	if (!checkable)
-		return ApiActions::CreateResult(404, "Cannot enable passive checks for non-existent object.");
-
-	checkable->SetEnableActiveChecks(true);
-
-	return ApiActions::CreateResult(200, "Successfully enabled passive checks for object " + checkable->GetName() + ".");
-}
-
-Dictionary::Ptr ApiActions::DisableActiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
-
-	if (!checkable)
-		return ApiActions::CreateResult(404, "Cannot disable passive checks non-existent object.");
-
-	checkable->SetEnableActiveChecks(false);
-
-	return ApiActions::CreateResult(200, "Successfully disabled passive checks for object " + checkable->GetName() + ".");
+	return ApiActions::CreateResult(200, "Successfully " + String((params->Get("active") ? "enabled" : "disabled")) + " passive checks for object " + checkable->GetName() + ".");
 }
 
 Dictionary::Ptr ApiActions::AcknowledgeProblem(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
@@ -325,28 +297,19 @@ Dictionary::Ptr ApiActions::RemoveCommentByID(const ConfigObject::Ptr& object, c
 	return ApiActions::CreateResult(200, "Successfully removed comment " + Convert::ToString(comment_id) + ".");
 }
 
-Dictionary::Ptr ApiActions::EnableNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::Notifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' is required");
+
 	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
 
 	if (!checkable)
-		return ApiActions::CreateResult(404, "Cannot enable notifications for non-existent object");
+		return ApiActions::CreateResult(404, "Cannot access notifications for non-existent object");
 
-	checkable->SetEnableNotifications(true);
+	checkable->SetEnableNotifications(params->Get("active"));
 
-	return ApiActions::CreateResult(200, "Successfully enabled notifications for " + checkable->GetName());
-}
-
-Dictionary::Ptr ApiActions::DisableNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
-
-	if (!checkable)
-		return ApiActions::CreateResult(404, "Cannot disable notifications for non-existent object");
-
-	checkable->SetEnableNotifications(true);
-
-	return ApiActions::CreateResult(200, "Successfully disabled notifications for " + checkable->GetName());
+	return ApiActions::CreateResult(200, "Successfully " + String((params->Get("active") ? "enabled" : "disabled")) + " notifications for " + checkable->GetName());
 }
 
 Dictionary::Ptr ApiActions::DelayNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
@@ -401,28 +364,19 @@ Dictionary::Ptr ApiActions::ScheduleDowntime(const ConfigObject::Ptr& object, co
 	     Convert::ToString(legacy_id) + " for object " + checkable->GetName() + ".", additional);
 }
 
-Dictionary::Ptr ApiActions::EnableFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::FlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' is required");
+
 	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
 
 	if (!checkable)
-		return ApiActions::CreateResult(404, "Can't enable flap detection for non-existent object");
+		return ApiActions::CreateResult(404, "Can't access flap detection for non-existent object");
 
-	checkable->SetEnableFlapping(true);
+	checkable->SetEnableFlapping(params->Get("active"));
 
-	return ApiActions::CreateResult(200, "Successfully enabled flap detection for " + checkable->GetName());
-}
-
-Dictionary::Ptr ApiActions::DisableFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	Checkable::Ptr checkable = static_pointer_cast<Checkable>(object);
-
-	if (!checkable)
-		return ApiActions::CreateResult(404, "Can't disable flap detection for non-existent object");
-
-	checkable->SetEnableFlapping(false);
-
-	return ApiActions::CreateResult(200, "Successfully disabled flap detection for " + checkable->GetName());
+	return ApiActions::CreateResult(200, "Successfully " + String((params->Get("active") ? "enabled" : "disabled")) + " enabled flap detection for " + checkable->GetName());
 }
 
 Dictionary::Ptr ApiActions::RemoveDowntime(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
@@ -453,88 +407,64 @@ Dictionary::Ptr ApiActions::RemoveDowntimeByID(const ConfigObject::Ptr& object, 
 	return ApiActions::CreateResult(200, "Successfully removed downtime " + Convert::ToString(downtime_id) + ".");
 }
 
-Dictionary::Ptr ApiActions::EnableGlobalNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::GlobalNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
-	IcingaApplication::GetInstance()->SetEnableNotifications(true);
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' (true/false) is required");
 
-	return ApiActions::CreateResult(200, "Globally enabled notifications.");
+	IcingaApplication::GetInstance()->SetEnableNotifications(params->Get("active"));
+
+	return ApiActions::CreateResult(200, "Globally " + String((params->Get("active") ? "enabled" : "disabled")) + " notifications.");
 }
 
-Dictionary::Ptr ApiActions::DisableGlobalNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::GlobalFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
-	IcingaApplication::GetInstance()->SetEnableNotifications(false);
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' (true/false) is required");
 
-	return ApiActions::CreateResult(200, "Globally disabled notifications.");
+	IcingaApplication::GetInstance()->SetEnableFlapping(params->Get("active"));
+
+	return ApiActions::CreateResult(200, "Globally " + String((params->Get("active") ? "enabled" : "disabled")) + " flap detection.");
 }
 
-Dictionary::Ptr ApiActions::EnableGlobalFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::GlobalEventHandlers(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
-	IcingaApplication::GetInstance()->SetEnableFlapping(true);
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' (true/false) is required");
 
-	return ApiActions::CreateResult(200, "Globally enabled flap detection.");
+	IcingaApplication::GetInstance()->SetEnableEventHandlers(params->Get("active"));
+
+	return ApiActions::CreateResult(200, "Globally " + String((params->Get("active") ? "enabled" : "disabled")) + " event handlers.");
 }
 
-Dictionary::Ptr ApiActions::DisableGlobalFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::GlobalPerformanceData(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
-	IcingaApplication::GetInstance()->SetEnableFlapping(false);
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' (true/false) is required");
 
-	return ApiActions::CreateResult(200, "Globally disabled flap detection.");
+	IcingaApplication::GetInstance()->SetEnablePerfdata(params->Get("active"));
+
+	return ApiActions::CreateResult(200, "Globally " + String((params->Get("active") ? "enabled" : "disabled")) + " performance data processing.");
 }
 
-Dictionary::Ptr ApiActions::EnableGlobalEventHandlers(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::GlobalSvcCheckExecution(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
-	IcingaApplication::GetInstance()->SetEnableEventHandlers(true);
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' (true/false) is required");
 
-	return ApiActions::CreateResult(200, "Globally enabled event handlers.");
+	IcingaApplication::GetInstance()->SetEnableServiceChecks(params->Get("active"));
+
+	return ApiActions::CreateResult(200, "Globally " + String((params->Get("active") ? "enabled" : "disabled")) + " service checks.");
 }
 
-Dictionary::Ptr ApiActions::DisableGlobalEventHandlers(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
+Dictionary::Ptr ApiActions::GlobalHostCheckExecution(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
 {
-	IcingaApplication::GetInstance()->SetEnableEventHandlers(false);
+	if (!params->Contains("active"))
+		return ApiActions::CreateResult(403, "Parameter 'active' (true/false) is required");
 
-	return ApiActions::CreateResult(200, "Globally disabled event handlers.");
-}
+	IcingaApplication::GetInstance()->SetEnableHostChecks(params->Get("active"));
 
-Dictionary::Ptr ApiActions::EnableGlobalPerformanceData(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	IcingaApplication::GetInstance()->SetEnablePerfdata(true);
-
-	return ApiActions::CreateResult(200, "Globally enabled performance data processing.");
-}
-
-Dictionary::Ptr ApiActions::DisableGlobalPerformanceData(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	IcingaApplication::GetInstance()->SetEnablePerfdata(false);
-
-	return ApiActions::CreateResult(200, "Globally disabled performance data processing.");
-}
-
-Dictionary::Ptr ApiActions::StartGlobalExecutingSvcChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	IcingaApplication::GetInstance()->SetEnableServiceChecks(true);
-
-	return ApiActions::CreateResult(200, "Globally enabled service checks.");
-}
-
-Dictionary::Ptr ApiActions::StopGlobalExecutingSvcChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	IcingaApplication::GetInstance()->SetEnableServiceChecks(false);
-
-	return ApiActions::CreateResult(200, "Globally disabled service checks.");
-}
-
-Dictionary::Ptr ApiActions::StartGlobalExecutingHostChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	IcingaApplication::GetInstance()->SetEnableHostChecks(true);
-
-	return ApiActions::CreateResult(200, "Globally enabled host checks.");
-}
-
-Dictionary::Ptr ApiActions::StopGlobalExecutingHostChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params)
-{
-	IcingaApplication::GetInstance()->SetEnableHostChecks(false);
-
-	return ApiActions::CreateResult(200, "Globally disabled host checks.");
+	return ApiActions::CreateResult(200, "Globally " + String((params->Get("active") ? "enabled" : "disabled")) + " host checks.");
 }
 
 //TODO-MA

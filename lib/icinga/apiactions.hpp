@@ -46,14 +46,10 @@ public:
 	static Dictionary::Ptr RemoveDowntime(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
 	static Dictionary::Ptr RemoveDowntimeByID(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
 
-	static Dictionary::Ptr EnablePassiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisablePassiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr EnableActiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisableActiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr EnableNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisableNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr EnableFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisableFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr PassiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr ActiveChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr Notifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr FlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
 
 /*
 	static Dictionary::Ptr ChangeEventHandler(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
@@ -64,18 +60,12 @@ public:
 	static Dictionary::Ptr ChangeCheckPeriod(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
 */
 
-	static Dictionary::Ptr EnableGlobalNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisableGlobalNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr EnableGlobalFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisableGlobalFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr EnableGlobalEventHandlers(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisableGlobalEventHandlers(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr EnableGlobalPerformanceData(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr DisableGlobalPerformanceData(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr StartGlobalExecutingSvcChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr StopGlobalExecutingSvcChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr StartGlobalExecutingHostChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
-	static Dictionary::Ptr StopGlobalExecutingHostChecks(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr GlobalNotifications(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr GlobalFlapDetection(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr GlobalEventHandlers(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr GlobalPerformanceData(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr GlobalSvcCheckExecution(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
+	static Dictionary::Ptr GlobalHostCheckExecution(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
 
 	static Dictionary::Ptr ShutdownProcess(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
 	static Dictionary::Ptr RestartProcess(const ConfigObject::Ptr& object, const Dictionary::Ptr& params);
